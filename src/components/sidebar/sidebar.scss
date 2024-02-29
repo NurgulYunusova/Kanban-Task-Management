@@ -1,0 +1,20 @@
+@import "../../assets/sass/mixins.scss";
+@import "../../assets/sass/variables.scss";
+
+.sidebar {
+  width: 255px;
+  background-color: rgb(41, 51, 93);
+  height: calc(100vh - 77.6px);
+  font-family: $base-font;
+
+  &Container {
+    padding: 18px;
+
+    h3 {
+      font-size: 12px;
+      color: $base-color2;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+  }
+}

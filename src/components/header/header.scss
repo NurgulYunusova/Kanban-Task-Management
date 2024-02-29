@@ -1,0 +1,61 @@
+@import "../../assets/sass/mixins.scss";
+@import "../../assets/sass/variables.scss";
+
+header {
+  width: 100vw;
+  height: 100%;
+  background-color: red;
+
+  .container {
+    padding: 18px;
+    @include center();
+    font-family: $base-font;
+    width: 100%;
+
+    .leftSide {
+      @include center($justify-content: flex-start);
+      gap: 15px;
+      flex-basis: 18%;
+
+      h3 {
+        font-size: 32px;
+      }
+    }
+
+    .middleSide {
+      flex-basis: 64%;
+
+      h3 {
+        font-size: 21px;
+      }
+    }
+
+    .rightSide {
+      @include center($justify-content: flex-end);
+      flex-basis: 18%;
+      gap: 20px;
+
+      button {
+        padding: 15px 25px;
+        font-size: 15px;
+        font-weight: 700;
+        border: transparent;
+        outline: none;
+        background-color: $base-color1;
+        color: #fff;
+        border-radius: 25px;
+        font-family: $base-font;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+
+        &:hover {
+          background-color: #8f8ce1;
+        }
+      }
+
+      .menu {
+        cursor: pointer;
+      }
+    }
+  }
+}
