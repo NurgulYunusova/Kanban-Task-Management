@@ -3,18 +3,127 @@
 
 .sidebar {
   width: 255px;
-  background-color: rgb(41, 51, 93);
-  height: calc(100vh - 77.6px);
+  height: 618.7px;
   font-family: $base-font;
 
   &Container {
-    padding: 18px;
+    padding: 18px 18px 18px 0;
+    height: 100%;
+
+    .topSection {
+      height: 80%;
+    }
+
+    .bottomSection {
+      height: 20%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      gap: 18px;
+    }
 
     h3 {
       font-size: 12px;
       color: $base-color2;
       text-transform: uppercase;
-      letter-spacing: 2px;
+      letter-spacing: 3px;
+      padding-left: 18px;
+      margin: 5px 0 20px;
+    }
+
+    .boardsNames {
+      ul {
+        list-style: none;
+
+        li {
+          font-weight: 700;
+          font-size: 15px;
+          display: flex;
+          gap: 15px;
+          align-items: center;
+          color: #fff;
+          padding: 15px 18px;
+          border-top-right-radius: 25px;
+          border-bottom-right-radius: 25px;
+          cursor: pointer;
+          transition: all 0.2s ease-in-out;
+          color: $base-color2;
+
+          &:hover {
+            background-color: rgba(99, 95, 199, 0.1);
+          }
+
+          &.active {
+            background-color: $base-color1;
+            color: #fff;
+          }
+        }
+      }
+    }
+
+    .createNew {
+      font-weight: 700;
+      font-size: 15px;
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      color: $base-color1;
+      padding: 15px 18px;
+      border-top-right-radius: 25px;
+      border-bottom-right-radius: 25px;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+      border: transparent;
+      outline: none;
+      background-color: transparent;
+      font-family: $base-font;
+      letter-spacing: 0.3px;
+      width: 100%;
+
+      &:hover {
+        background-color: rgba(99, 95, 199, 0.1);
+      }
+    }
+
+    .toggleMode {
+      width: 219px;
+      background-color: rgba(99, 95, 199, 0.1);
+      @include center();
+      gap: 25px;
+      margin: 0 18px;
+      padding: 10px 0;
+      border-radius: 5px;
+
+      svg {
+        display: flex;
+        align-items: center;
+      }
+    }
+
+    .hideSidebarButton {
+      button {
+        font-weight: 700;
+        font-size: 15px;
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        color: $base-color2;
+        padding: 5px 18px 5px 30px;
+        border-top-right-radius: 25px;
+        border-bottom-right-radius: 25px;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+        border: transparent;
+        outline: none;
+        background-color: transparent;
+        font-family: $base-font;
+        letter-spacing: 0.3px;
+        width: 100%;
+
+        &:hover {
+          background-color: rgba(99, 95, 199, 0.1);
+        }
+      }
     }
   }
 }
