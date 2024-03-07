@@ -104,8 +104,10 @@ function Sidebar() {
                       name="name"
                       id="name"
                       placeholder="e.g. Web Design"
+                      required
                     />{" "}
                     <br />
+                    <label htmlFor="boardColumns">Board Columns</label>
                     {columnNames.map((columnName, index) => (
                       <div key={index}>
                         <input
@@ -118,6 +120,7 @@ function Sidebar() {
                             updatedColumns[index] = e.target.value;
                             setColumnNames(updatedColumns);
                           }}
+                          required
                         />
                         {
                           <img
