@@ -30,9 +30,10 @@
 
           .task {
             background-color: #fff;
-            border-radius: 5px;
+            border-radius: 8px;
             padding: 23px 16px;
             cursor: pointer;
+            box-shadow: 0 4px 6px rgba(54, 78, 126, 0.102);
 
             h3 {
               font-size: 15px;
