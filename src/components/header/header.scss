@@ -34,7 +34,7 @@ header {
       flex-basis: 18%;
       gap: 20px;
 
-      button {
+      .addNewTaskBtn {
         padding: 15px 25px;
         font-size: 15px;
         font-weight: 700;
@@ -148,7 +148,9 @@ header {
             }
 
             .addNewSubtaskBtn,
-            .createTaskBtn {
+            .createTaskBtn,
+            .addNewColumnBtn,
+            .saveChangesBtn {
               width: 100%;
               background-color: $base-color1;
               border: transparent;
@@ -170,12 +172,112 @@ header {
             .addNewSubtaskBtn {
               margin: 15px 0 25px;
             }
+
+            .addNewColumnBtn {
+              margin: 5px 0 25px;
+            }
           }
         }
       }
 
       .menu {
         cursor: pointer;
+
+        .menuContent {
+          position: absolute;
+          right: 25px;
+          top: 80px;
+          width: 150px;
+          background-color: #fff;
+          border-radius: 8px;
+          box-shadow: 0 10px 20px rgba(54, 78, 126, 0.25);
+          color: #828fa3;
+          padding: 18px;
+
+          ul {
+            list-style: none;
+
+            li {
+              font-size: 13px;
+              font-weight: 500;
+            }
+
+            .delete {
+              color: #ea5555;
+              margin-top: 16px;
+            }
+          }
+        }
+      }
+
+      .deleteModal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .modalContent {
+          background-color: #fff;
+          padding: 32px;
+          border-radius: 8px;
+          width: 480px;
+          max-height: 90%;
+          overflow-y: scroll;
+
+          h4 {
+            font-size: 18px;
+            color: #ea5555;
+          }
+
+          p {
+            font-size: 13px;
+            margin: 24px 0;
+            font-weight: 500;
+            line-height: 23px;
+          }
+
+          .modalActions {
+            display: flex;
+            gap: 16px;
+
+            #delete,
+            #cancel {
+              width: 50%;
+              padding: 12px;
+              font-size: 13px;
+              font-weight: 700;
+              border: transparent;
+              outline: none;
+              border-radius: 25px;
+              font-family: $base-font;
+              cursor: pointer;
+              transition: all 0.2s ease-in-out;
+            }
+
+            #delete {
+              background-color: #ea5555;
+              color: #fff;
+
+              &:hover {
+                background-color: #ea555584;
+              }
+            }
+
+            #cancel {
+              background-color: rgba(99, 95, 199, 0.1);
+              color: #635fc7;
+
+              &:hover {
+                background-color: #8f8ce154;
+              }
+            }
+          }
+        }
       }
     }
   }
