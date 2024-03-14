@@ -1,12 +1,56 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import "./sidebar.scss";
 import { Switch } from "antd";
 import xmark from "../../assets/images/x-mark.svg";
+import { TaskContext } from "../../context/TaskContext";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 function Sidebar() {
+  const { updateBoards } = useContext(TaskContext);
+
   const [modalVisible, setModalVisible] = useState(false);
   const [columnNames, setColumnNames] = useState(["Todo", "Doing"]);
+
   const modalRef = useRef();
+
+  const { handleSubmit, handleChange, values, setValues } = useFormik({
+    initialValues: {
+      name: "",
+      columns: {},
+    },
+    validationSchema: Yup.object({
+      name: Yup.string().required("Board name is required"),
+      columns: Yup.object()
+        .test(
+          "at-least-one-column",
+          "At least one column is required",
+          (value) => {
+            return Object.keys(value).length > 0;
+          }
+        )
+        .required("At least one column is required"),
+    }),
+    onSubmit: (values) => {
+      updateBoards({
+        boardName: values.name,
+        boardColumns: values.columns,
+      });
+      console.log(values);
+    },
+  });
+
+  useEffect(() => {
+    setValues((prevValues) => ({
+      ...prevValues,
+      columns: Object.fromEntries(
+        columnNames.map((columnName, index) => [
+          `column${index + 1}`,
+          columnName,
+        ])
+      ),
+    }));
+  }, [columnNames, setValues]);
 
   const handleCreateNewBoard = () => {
     setModalVisible(true);
@@ -97,15 +141,16 @@ function Sidebar() {
               <div className="modalBackdrop">
                 <div className="modal" ref={modalRef}>
                   <h3>Add new board</h3>
-                  <form onSubmit={(e) => e.preventDefault()}>
+                  <form onSubmit={handleSubmit}>
                     <label htmlFor="name">Board Name</label> <br />
                     <input
                       type="text"
                       name="name"
                       id="name"
                       placeholder="e.g. Web Design"
-                      required
-                    />{" "}
+                      onChange={handleChange}
+                      value={values.name}
+                    />
                     <br />
                     <label htmlFor="boardColumns">Board Columns</label>
                     {columnNames.map((columnName, index) => (
@@ -120,7 +165,6 @@ function Sidebar() {
                             updatedColumns[index] = e.target.value;
                             setColumnNames(updatedColumns);
                           }}
-                          required
                         />
                         {
                           <img
@@ -138,11 +182,12 @@ function Sidebar() {
                     <button
                       className="addNewColumnBtn"
                       onClick={handleAddColumn}
+                      type="button"
                     >
                       + Add New Column
                     </button>{" "}
                     <br />
-                    <button className="createNewBoardBtn">
+                    <button className="createNewBoardBtn" type="submit">
                       Create New Board
                     </button>
                   </form>
