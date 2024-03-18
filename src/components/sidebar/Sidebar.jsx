@@ -7,31 +7,38 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 
 function Sidebar() {
-  const { updateBoards, board } = useContext(TaskContext);
+  const { updateBoards, boards } = useContext(TaskContext);
 
   const [modalVisible, setModalVisible] = useState(false);
   const [columnNames, setColumnNames] = useState(["Todo", "Doing"]);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   const modalRef = useRef();
 
-  const { handleSubmit, handleChange, values, setValues } = useFormik({
-    initialValues: {
-      name: "",
-      columns: [],
-    },
-    validationSchema: Yup.object({
-      name: Yup.string().required("Board name is required"),
-      columns: Yup.array().required("Column name is required"),
-    }),
-    onSubmit: ({ name, columns }) => {
-      updateBoards({
-        name: name,
-        columns: columns,
-      });
+  const { handleSubmit, handleChange, values, setValues, resetForm } =
+    useFormik({
+      initialValues: {
+        name: "",
+        columns: [],
+      },
+      validationSchema: Yup.object({
+        name: Yup.string().required("Board name is required"),
+        columns: Yup.array().required("Column name is required"),
+      }),
+      onSubmit: ({ name, columns }) => {
+        updateBoards({
+          name: name,
+          columns: columns,
+        });
 
-      setModalVisible(false);
-    },
-  });
+        setModalVisible(false);
+
+        resetForm({
+          name: "",
+          columns: columnNames,
+        });
+      },
+    });
 
   useEffect(() => {
     setValues((prevValues) => ({
@@ -69,36 +76,29 @@ function Sidebar() {
       <div className="sidebar">
         <div className="sidebarContainer">
           <div className="topSection">
-            <h3 className="allBoards">All boards ({board.length})</h3>
+            <h3 className="allBoards">All boards ({boards.length})</h3>
 
             <div className="boardsNames">
               <ul>
-                <li className="active">
-                  <svg
-                    width="16"
-                    height="16"
-                    xmlns="http://www.w3.org/2000/svg"
+                {boards.map((board, index) => (
+                  <li
+                    key={index}
+                    className={index === activeIndex ? "active" : ""}
+                    onClick={() => setActiveIndex(index)}
                   >
-                    <path
-                      d="M0 2.889A2.889 2.889 0 0 1 2.889 0H13.11A2.889 2.889 0 0 1 16 2.889V13.11A2.888 2.888 0 0 1 13.111 16H2.89A2.889 2.889 0 0 1 0 13.111V2.89Zm1.333 5.555v4.667c0 .859.697 1.556 1.556 1.556h6.889V8.444H1.333Zm8.445-1.333V1.333h-6.89A1.556 1.556 0 0 0 1.334 2.89V7.11h8.445Zm4.889-1.333H11.11v4.444h3.556V5.778Zm0 5.778H11.11v3.11h2a1.556 1.556 0 0 0 1.556-1.555v-1.555Zm0-7.112V2.89a1.555 1.555 0 0 0-1.556-1.556h-2v3.111h3.556Z"
-                      fill="#828FA3"
-                    />
-                  </svg>{" "}
-                  Platform Launch
-                </li>
-                <li>
-                  <svg
-                    width="16"
-                    height="16"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 2.889A2.889 2.889 0 0 1 2.889 0H13.11A2.889 2.889 0 0 1 16 2.889V13.11A2.888 2.888 0 0 1 13.111 16H2.89A2.889 2.889 0 0 1 0 13.111V2.89Zm1.333 5.555v4.667c0 .859.697 1.556 1.556 1.556h6.889V8.444H1.333Zm8.445-1.333V1.333h-6.89A1.556 1.556 0 0 0 1.334 2.89V7.11h8.445Zm4.889-1.333H11.11v4.444h3.556V5.778Zm0 5.778H11.11v3.11h2a1.556 1.556 0 0 0 1.556-1.555v-1.555Zm0-7.112V2.89a1.555 1.555 0 0 0-1.556-1.556h-2v3.111h3.556Z"
-                      fill="#828FA3"
-                    />
-                  </svg>{" "}
-                  Marketing Plan
-                </li>
+                    <svg
+                      width="16"
+                      height="16"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M0 2.889A2.889 2.889 0 0 1 2.889 0H13.11A2.889 2.889 0 0 1 16 2.889V13.11A2.888 2.888 0 0 1 13.111 16H2.89A2.889 2.889 0 0 1 0 13.111V2.89Zm1.333 5.555v4.667c0 .859.697 1.556 1.556 1.556h6.889V8.444H1.333Zm8.445-1.333V1.333h-6.89A1.556 1.556 0 0 0 1.334 2.89V7.11h8.445Zm4.889-1.333H11.11v4.444h3.556V5.778Zm0 5.778H11.11v3.11h2a1.556 1.556 0 0 0 1.556-1.555v-1.555Zm0-7.112V2.89a1.555 1.555 0 0 0-1.556-1.556h-2v3.111h3.556Z"
+                        fill="#828FA3"
+                      />
+                    </svg>{" "}
+                    {board.name}
+                  </li>
+                ))}
               </ul>
             </div>
 

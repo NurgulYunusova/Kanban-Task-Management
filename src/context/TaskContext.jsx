@@ -1,19 +1,21 @@
 /* eslint-disable react/prop-types */
-import { createContext, useState } from "react";
+import { createContext } from "react";
+import data from "../data.json";
 
 export const TaskContext = createContext();
 
 export const TaskProvider = ({ children }) => {
-  const [board, setBoard] = useState({ name: "", columns: [] });
+  const boards = data.boards;
 
-  const updateBoards = (newBoards) => {
-    setBoard(newBoards);
+  const updateBoards = (newBoard) => {
+    boards.push(newBoard);
+    console.log("board: ", boards);
   };
 
-  console.log("board: ", board);
+  console.log("board: ", boards);
 
   return (
-    <TaskContext.Provider value={{ board, updateBoards }}>
+    <TaskContext.Provider value={{ boards, updateBoards }}>
       {children}
     </TaskContext.Provider>
   );

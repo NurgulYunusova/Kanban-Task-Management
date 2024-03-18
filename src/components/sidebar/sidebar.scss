@@ -46,16 +46,22 @@
           border-top-right-radius: 25px;
           border-bottom-right-radius: 25px;
           cursor: pointer;
-          transition: all 0.2s ease-in-out;
+          transition: all 0.2s ease-in;
           color: $base-color2;
 
           &:hover {
             background-color: rgba(99, 95, 199, 0.1);
+            color: $base-color1;
           }
 
           &.active {
             background-color: $base-color1;
             color: #fff;
+
+            &:hover {
+              background-color: rgba(99, 95, 199, 0.1);
+              color: $base-color1;
+            }
           }
         }
       }
