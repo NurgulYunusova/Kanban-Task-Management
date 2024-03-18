@@ -4,16 +4,16 @@ import { createContext, useState } from "react";
 export const TaskContext = createContext();
 
 export const TaskProvider = ({ children }) => {
-  const [boards, setBoards] = useState({ boardName: "", boardColumns: {} });
+  const [board, setBoard] = useState({ name: "", columns: [] });
 
   const updateBoards = (newBoards) => {
-    setBoards(newBoards);
+    setBoard(newBoards);
   };
 
-  console.log("board: ", boards);
+  console.log("board: ", board);
 
   return (
-    <TaskContext.Provider value={{ boards, updateBoards }}>
+    <TaskContext.Provider value={{ board, updateBoards }}>
       {children}
     </TaskContext.Provider>
   );
