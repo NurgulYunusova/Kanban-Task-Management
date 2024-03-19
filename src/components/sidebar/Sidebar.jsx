@@ -7,7 +7,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 
 function Sidebar() {
-  const { updateBoards, boards } = useContext(TaskContext);
+  const { updateBoards, boards, setBoards } = useContext(TaskContext);
 
   const [modalVisible, setModalVisible] = useState(false);
   const [columnNames, setColumnNames] = useState(["Todo", "Doing"]);
@@ -55,6 +55,17 @@ function Sidebar() {
     setColumnNames([...columnNames, ""]);
   };
 
+  const handleClick = (e, index) => {
+    e.preventDefault();
+    setActiveIndex(index);
+
+    const updatedBoards = boards.map((board, i) => {
+      return { ...board, isActive: i === index };
+    });
+
+    setBoards(updatedBoards);
+  };
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
@@ -84,7 +95,7 @@ function Sidebar() {
                   <li
                     key={index}
                     className={index === activeIndex ? "active" : ""}
-                    onClick={() => setActiveIndex(index)}
+                    onClick={(e) => handleClick(e, index)}
                   >
                     <svg
                       width="16"

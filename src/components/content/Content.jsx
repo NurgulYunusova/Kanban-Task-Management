@@ -1,10 +1,17 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import "./content.scss";
 import xmark from "../../assets/images/x-mark.svg";
+import { TaskContext } from "../../context/TaskContext";
 
 function Content() {
+  const { boards } = useContext(TaskContext);
+
   const [modalVisible, setModalVisible] = useState(false);
   const [columnNames, setColumnNames] = useState(["Todo", "Doing", "Done"]);
+
+  const board = boards?.find((board) => board.isActive === true);
+  const columns = board?.columns;
+
   const modalRef = useRef();
 
   const handleNewColumn = () => {
@@ -36,53 +43,27 @@ function Content() {
       <div className="content">
         <div className="contentContainer">
           <div className="columns">
-            <div className="column">
-              <h4 className="columnName">Todo (4)</h4>
-              <div className="tasks">
-                <div className="task">
-                  <h3>Build UI for onboarding flow</h3>
-                  <p>1 of 3 subtasks</p>
-                </div>
-                <div className="task">
-                  <h3>Build UI for onboarding flow</h3>
-                  <p>1 of 3 subtasks</p>
-                </div>
-                <div className="task">
-                  <h3>Build UI for onboarding flow</h3>
-                  <p>1 of 3 subtasks</p>
-                </div>
-                <div className="task">
-                  <h3>Build UI for onboarding flow</h3>
-                  <p>1 of 3 subtasks</p>
-                </div>
-              </div>
-            </div>
-            <div className="column">
-              <h4 className="columnName">Doing (2)</h4>
-              <div className="tasks">
-                <div className="task">
-                  <h3>Build UI for onboarding flow </h3>
-                  <p>1 of 3 subtasks</p>
-                </div>
-                <div className="task">
-                  <h3>Build UI for onboarding flow</h3>
-                  <p>1 of 3 subtasks</p>
+            {columns?.map((column, index) => (
+              <div className="column" key={index}>
+                <h4 className="columnName">
+                  {column.name}({column.tasks.length})
+                </h4>
+                <div className="tasks">
+                  {column.tasks.map((task, index) => (
+                    <div className="task" key={index}>
+                      <h3>{task.title}</h3>
+                      <p>
+                        {
+                          task.subtasks.filter((subtask) => subtask.isCompleted)
+                            .length
+                        }{" "}
+                        of {task.subtasks.length} subtasks
+                      </p>
+                    </div>
+                  ))}
                 </div>
               </div>
-            </div>
-            <div className="column">
-              <h4 className="columnName">Doing (2)</h4>
-              <div className="tasks">
-                <div className="task">
-                  <h3>Build UI for onboarding flow</h3>
-                  <p>1 of 3 subtasks</p>
-                </div>
-                <div className="task">
-                  <h3>Build UI for onboarding flow</h3>
-                  <p>1 of 3 subtasks</p>
-                </div>
-              </div>
-            </div>
+            ))}
 
             <div className="addColumnButton" onClick={handleNewColumn}>
               <p>+ New Column</p>
