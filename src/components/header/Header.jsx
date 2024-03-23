@@ -1,9 +1,14 @@
 /* eslint-disable react/no-unescaped-entities */
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import "./header.scss";
 import xmark from "../../assets/images/x-mark.svg";
+import { TaskContext } from "../../context/TaskContext";
+import { DarkModeContext } from "../../context/DarkModeContext";
 
 function Header() {
+  const { boards } = useContext(TaskContext);
+  const { darkMode } = useContext(DarkModeContext);
+
   const [modalVisible, setModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [columnNames, setColumnNames] = useState(["", ""]);
@@ -15,6 +20,7 @@ function Header() {
   const [selectedValue, setSelectedValue] = useState("");
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+
   const modalRef = useRef();
 
   const openDeleteModal = () => {
@@ -79,7 +85,7 @@ function Header() {
 
   return (
     <>
-      <header>
+      <header className={darkMode ? "dark" : "light"}>
         <div className="container">
           <div className="leftSide">
             <svg width="24" height="25" xmlns="http://www.w3.org/2000/svg">
@@ -93,7 +99,13 @@ function Header() {
           </div>
 
           <div className="middleSide">
-            <h3>Platform Launch</h3>
+            <h3>
+              {boards
+                .filter((board) => board.isActive)
+                .map((board) => (
+                  <>{board.name}</>
+                ))}
+            </h3>
           </div>
 
           <div className="rightSide">

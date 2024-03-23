@@ -9,6 +9,21 @@ header {
   left: 0;
   background-color: #fff;
 
+  &.light {
+    background-color: #fff;
+  }
+
+  &.dark {
+    background-color: #2b2c37;
+
+    .container {
+      .leftSide h3,
+      .middleSide h3 {
+        color: #fff;
+      }
+    }
+  }
+
   .container {
     padding: 18px;
     @include center();
@@ -67,6 +82,7 @@ header {
         display: flex;
         justify-content: center;
         align-items: center;
+        z-index: 99;
 
         .modal {
           background-color: #fff;

@@ -2,9 +2,11 @@ import { useContext, useEffect, useRef, useState } from "react";
 import "./content.scss";
 import xmark from "../../assets/images/x-mark.svg";
 import { TaskContext } from "../../context/TaskContext";
+import { DarkModeContext } from "../../context/DarkModeContext";
 
 function Content() {
   const { boards } = useContext(TaskContext);
+  const { darkMode } = useContext(DarkModeContext);
 
   const [modalVisible, setModalVisible] = useState(false);
   const [columnNames, setColumnNames] = useState(["Todo", "Doing", "Done"]);
@@ -40,7 +42,7 @@ function Content() {
 
   return (
     <>
-      <div className="content">
+      <div className={darkMode ? "content dark" : "content light"}>
         <div className="contentContainer">
           <div className="columns">
             {columns?.map((column, index) => (
