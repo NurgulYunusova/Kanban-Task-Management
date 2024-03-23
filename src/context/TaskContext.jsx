@@ -7,14 +7,13 @@ export const TaskContext = createContext();
 export const TaskProvider = ({ children }) => {
   const [boards, setBoards] = useState(data.boards);
 
-  const updateBoards = (newBoard) => {
+  const createBoards = (newBoard) => {
     boards.push(newBoard);
+    console.log("board: ", boards);
   };
 
-  console.log("board: ", boards);
-
   return (
-    <TaskContext.Provider value={{ boards, updateBoards, setBoards }}>
+    <TaskContext.Provider value={{ boards, createBoards, setBoards }}>
       {children}
     </TaskContext.Provider>
   );

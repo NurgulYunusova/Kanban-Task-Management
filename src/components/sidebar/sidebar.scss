@@ -3,8 +3,11 @@
 
 .sidebar {
   width: 255px;
-  height: 618.7px;
+  height: calc(100vh - 85px);
   font-family: $base-font;
+  position: fixed;
+  top: 85px;
+  background-color: #fff;
 
   &Container {
     padding: 18px 18px 18px 0;

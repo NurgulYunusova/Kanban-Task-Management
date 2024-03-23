@@ -4,6 +4,8 @@
 .content {
   width: 100%;
   background-color: #f4f7fd;
+  padding: 85px 0 0 255px;
+  height: 100vh;
 
   &Container {
     padding: 25px;
@@ -56,6 +58,7 @@
 
       .addColumnButton {
         width: 280px;
+        min-height: calc(100vh - 180px);
         background: linear-gradient(180deg, #e9effa, rgba(233, 239, 250, 0.5));
         cursor: pointer;
         @include center();

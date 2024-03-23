@@ -7,7 +7,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 
 function Sidebar() {
-  const { updateBoards, boards, setBoards } = useContext(TaskContext);
+  const { createBoards, boards, setBoards } = useContext(TaskContext);
 
   const [modalVisible, setModalVisible] = useState(false);
   const [columnNames, setColumnNames] = useState(["Todo", "Doing"]);
@@ -26,9 +26,12 @@ function Sidebar() {
         columns: Yup.array().required("Column name is required"),
       }),
       onSubmit: ({ name, columns }) => {
-        updateBoards({
+        console.log(name, columns);
+
+        createBoards({
           name: name,
-          columns: columns,
+          isActive: false,
+          columns: columns.map((column) => ({ name: column, tasks: [] })),
         });
 
         setModalVisible(false);
@@ -49,6 +52,7 @@ function Sidebar() {
 
   const handleCreateNewBoard = () => {
     setModalVisible(true);
+    setColumnNames(["Todo", "Doing"]);
   };
 
   const handleAddColumn = () => {

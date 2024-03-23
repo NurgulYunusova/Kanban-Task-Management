@@ -46,10 +46,10 @@ function Content() {
             {columns?.map((column, index) => (
               <div className="column" key={index}>
                 <h4 className="columnName">
-                  {column.name}({column.tasks.length})
+                  {column?.name}({column.tasks?.length})
                 </h4>
                 <div className="tasks">
-                  {column.tasks.map((task, index) => (
+                  {column.tasks?.map((task, index) => (
                     <div className="task" key={index}>
                       <h3>{task.title}</h3>
                       <p>

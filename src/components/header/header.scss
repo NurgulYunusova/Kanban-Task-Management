@@ -3,13 +3,18 @@
 
 header {
   width: 100vw;
-  height: 100%;
+  height: 85px;
+  position: fixed;
+  right: 0;
+  left: 0;
+  background-color: #fff;
 
   .container {
     padding: 18px;
     @include center();
     font-family: $base-font;
     width: 100%;
+    height: 85px;
 
     .leftSide {
       @include center($justify-content: flex-start);
