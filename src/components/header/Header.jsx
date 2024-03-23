@@ -6,7 +6,7 @@ import { TaskContext } from "../../context/TaskContext";
 import { DarkModeContext } from "../../context/DarkModeContext";
 
 function Header() {
-  const { boards } = useContext(TaskContext);
+  const { boards, setBoards } = useContext(TaskContext);
   const { darkMode } = useContext(DarkModeContext);
 
   const [modalVisible, setModalVisible] = useState(false);
@@ -33,11 +33,7 @@ function Header() {
   };
 
   const handleDelete = () => {
-    // Implement your delete logic here
-    // For example, you can make an API call to delete the board
-    // Once the delete operation is successful, close the modal
-    console.log("Deleting board...");
-    // Close the modal
+    setBoards(boards.filter((board) => board.isActive !== true));
     closeDeleteModal();
   };
 
@@ -102,8 +98,8 @@ function Header() {
             <h3>
               {boards
                 .filter((board) => board.isActive)
-                .map((board) => (
-                  <>{board.name}</>
+                .map((board, index) => (
+                  <span key={index}>{board.name}</span>
                 ))}
             </h3>
           </div>
