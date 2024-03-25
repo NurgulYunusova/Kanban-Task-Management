@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import { useContext, useEffect, useRef, useState } from "react";
 import "./content.scss";
 import xmark from "../../assets/images/x-mark.svg";
@@ -9,12 +10,24 @@ function Content() {
   const { darkMode } = useContext(DarkModeContext);
 
   const [modalVisible, setModalVisible] = useState(false);
-  const [columnNames, setColumnNames] = useState(["Todo", "Doing", "Done"]);
+  const [columnNames, setColumnNames] = useState([]);
 
   const board = boards?.find((board) => board.isActive === true);
   const columns = board?.columns;
 
   const modalRef = useRef();
+
+  const { handleSubmit, handleChange, values } = useFormik({
+    initialValues: {
+      name: "",
+    },
+    validationSchema: Yup.object({
+      name: Yup.string().required("Board name is required"),
+    }),
+    onSubmit: (values) => {
+      console.log("hello", values);
+    },
+  });
 
   const handleNewColumn = () => {
     setModalVisible(true);
@@ -75,53 +88,62 @@ function Content() {
               <div className="modalBackdrop">
                 <div className="modal" ref={modalRef}>
                   <h3>Edit board</h3>
-                  <form onSubmit={(e) => e.preventDefault()}>
-                    <label htmlFor="name">Board Name</label> <br />
-                    <input
-                      type="text"
-                      name="name"
-                      id="name"
-                      placeholder="e.g. Web Design"
-                      value="Platform Launch"
-                      required
-                    />{" "}
-                    <br />
-                    <label htmlFor="boardColumns">Board Columns</label>
-                    {columnNames.map((columnName, index) => (
-                      <div key={index}>
-                        <input
-                          type="text"
-                          name={`column-${index}`}
-                          id={`column-${index}`}
-                          value={columnName}
-                          onChange={(e) => {
-                            const updatedColumns = [...columnNames];
-                            updatedColumns[index] = e.target.value;
-                            setColumnNames(updatedColumns);
-                          }}
-                          required
-                        />
-                        {
-                          <img
-                            src={xmark}
-                            alt="xmark"
-                            onClick={() => {
-                              const updatedColumns = [...columnNames];
-                              updatedColumns.splice(index, 1);
-                              setColumnNames(updatedColumns);
-                            }}
-                          />
-                        }
-                      </div>
-                    ))}
-                    <button
-                      className="addNewColumnBtn"
-                      onClick={handleAddColumn}
-                    >
-                      + Add New Column
-                    </button>{" "}
-                    <br />
-                    <button className="saveChangesBtn">Save Changes</button>
+                  <form onSubmit={handleSubmit}>
+                    {boards
+                      .filter((board) => board.isActive === true)
+                      .map((q, index) => (
+                        <span key={index}>
+                          <label htmlFor="name">Board Name</label> <br />
+                          <input
+                            type="text"
+                            name="name"
+                            id="name"
+                            placeholder="e.g. Web Design"
+                            value={q.name}
+                            onChange={handleChange}
+                            required
+                          />{" "}
+                          <br />
+                          <label htmlFor="boardColumns">Board Columns</label>
+                          {columnNames.map((columnName, index) => (
+                            <div key={index}>
+                              <input
+                                type="text"
+                                name={`column-${index}`}
+                                id={`column-${index}`}
+                                value={columnName}
+                                onChange={(e) => {
+                                  const updatedColumns = [...columnNames];
+                                  updatedColumns[index] = e.target.value;
+                                  setColumnNames(updatedColumns);
+                                }}
+                                required
+                              />
+                              {
+                                <img
+                                  src={xmark}
+                                  alt="xmark"
+                                  onClick={() => {
+                                    const updatedColumns = [...columnNames];
+                                    updatedColumns.splice(index, 1);
+                                    setColumnNames(updatedColumns);
+                                  }}
+                                />
+                              }
+                            </div>
+                          ))}
+                          <button
+                            className="addNewColumnBtn"
+                            onClick={handleAddColumn}
+                          >
+                            + Add New Column
+                          </button>{" "}
+                          <br />
+                          <button className="saveChangesBtn">
+                            Save Changes
+                          </button>
+                        </span>
+                      ))}
                   </form>
                 </div>
               </div>
