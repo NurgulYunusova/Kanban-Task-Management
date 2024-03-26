@@ -4,6 +4,8 @@ import "./content.scss";
 import xmark from "../../assets/images/x-mark.svg";
 import { TaskContext } from "../../context/TaskContext";
 import { DarkModeContext } from "../../context/DarkModeContext";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 function Content() {
   const { boards } = useContext(TaskContext);
@@ -12,12 +14,12 @@ function Content() {
   const [modalVisible, setModalVisible] = useState(false);
   const [columnNames, setColumnNames] = useState([]);
 
-  const board = boards?.find((board) => board.isActive === true);
+  const board = boards?.find((board) => board.isActive == true);
   const columns = board?.columns;
 
   const modalRef = useRef();
 
-  const { handleSubmit, handleChange, values } = useFormik({
+  const { handleSubmit, handleChange } = useFormik({
     initialValues: {
       name: "",
     },
@@ -28,6 +30,8 @@ function Content() {
       console.log("hello", values);
     },
   });
+
+  console.log(columns);
 
   const handleNewColumn = () => {
     setModalVisible(true);
@@ -99,8 +103,6 @@ function Content() {
                             name="name"
                             id="name"
                             placeholder="e.g. Web Design"
-                            value={q.name}
-                            onChange={handleChange}
                             required
                           />{" "}
                           <br />
@@ -139,7 +141,7 @@ function Content() {
                             + Add New Column
                           </button>{" "}
                           <br />
-                          <button className="saveChangesBtn">
+                          <button className="saveChangesBtn" type="submit">
                             Save Changes
                           </button>
                         </span>
