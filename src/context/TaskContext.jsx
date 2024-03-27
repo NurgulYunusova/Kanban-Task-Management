@@ -9,7 +9,6 @@ export const TaskProvider = ({ children }) => {
 
   const createBoards = (newBoard) => {
     boards.push(newBoard);
-    console.log("board: ", boards);
   };
 
   return (
