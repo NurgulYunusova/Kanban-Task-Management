@@ -9,19 +9,28 @@ function Header() {
   const { boards, setBoards } = useContext(TaskContext);
   const { darkMode } = useContext(DarkModeContext);
 
+  const activeBoardIndex = boards.findIndex((b) => b.isActive);
+  const board = boards?.find((board) => board.isActive == true);
+  const columns = board?.columns;
+
   const [modalVisible, setModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
-  const [columnNames, setColumnNames] = useState(["", ""]);
-  const [editColumnNames, setEditColumnNames] = useState([
-    "Todo",
-    "Doing",
-    "Done",
-  ]);
+  const [columnNames, setColumnNames] = useState([]);
   const [selectedValue, setSelectedValue] = useState("");
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [boardName, setBoardName] = useState("");
 
   const modalRef = useRef();
+
+  useEffect(() => {
+    setBoardName(board?.name);
+  }, [board]);
+
+  useEffect(() => {
+    let newColumns = columns?.map((column) => column.name);
+    setColumnNames(newColumns);
+  }, [columns]);
 
   const openDeleteModal = () => {
     setIsDeleteOpen(true);
@@ -48,8 +57,40 @@ function Header() {
     setIsEditOpen(false);
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const updatedBoards = [...boards];
+    const activeBoard = updatedBoards[activeBoardIndex];
+
+    activeBoard.name = boardName;
+    activeBoard.columns = columns
+      .filter((column, index) => columnNames[index])
+      .map((column, index) => ({
+        ...column,
+        name: columnNames[index],
+      }));
+
+    updatedBoards[activeBoardIndex] = activeBoard;
+
+    setBoards(updatedBoards);
+
+    setEditModalVisible(false);
+  };
+
   const handleAddColumn = () => {
-    setEditColumnNames([...editColumnNames, ""]);
+    const newColumn = { name: "" };
+
+    const updatedColumns = [...columns, newColumn];
+
+    setColumnNames([...columnNames, ""]);
+
+    const updatedBoard = { ...board, columns: updatedColumns };
+    const updatedBoards = [...boards];
+
+    updatedBoards[activeBoardIndex] = updatedBoard;
+
+    setBoards(updatedBoards);
   };
 
   const handleChange = (event) => {
@@ -212,23 +253,25 @@ function Header() {
                   </ul>
                 </div>
               )}
+
               {editModalVisible && (
                 <div className="modalBackdrop">
                   <div className="modal" ref={modalRef}>
                     <h3>Edit board</h3>
-                    <form onSubmit={(e) => e.preventDefault()}>
+                    <form onSubmit={(e) => handleSubmit(e)}>
                       <label htmlFor="name">Board Name</label> <br />
                       <input
                         type="text"
                         name="name"
                         id="name"
                         placeholder="e.g. Web Design"
-                        value="Platform Launch"
+                        value={boardName}
+                        onChange={(e) => setBoardName(e.target.value)}
                         required
                       />{" "}
                       <br />
                       <label htmlFor="boardColumns">Board Columns</label>
-                      {editColumnNames.map((columnName, index) => (
+                      {columnNames.map((columnName, index) => (
                         <div key={index}>
                           <input
                             type="text"
@@ -236,9 +279,9 @@ function Header() {
                             id={`column-${index}`}
                             value={columnName}
                             onChange={(e) => {
-                              const updatedColumns = [...editColumnNames];
+                              const updatedColumns = [...columnNames];
                               updatedColumns[index] = e.target.value;
-                              setEditColumnNames(updatedColumns);
+                              setColumnNames(updatedColumns);
                             }}
                             required
                           />
@@ -247,9 +290,9 @@ function Header() {
                               src={xmark}
                               alt="xmark"
                               onClick={() => {
-                                const updatedColumns = [...editColumnNames];
+                                const updatedColumns = [...columnNames];
                                 updatedColumns.splice(index, 1);
-                                setEditColumnNames(updatedColumns);
+                                setColumnNames(updatedColumns);
                               }}
                             />
                           }
