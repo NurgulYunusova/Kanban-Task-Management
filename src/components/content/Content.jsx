@@ -17,11 +17,11 @@ function Content() {
   const [boardName, setBoardName] = useState("");
 
   useEffect(() => {
-    setBoardName(board.name);
+    setBoardName(board?.name);
   }, [board]);
 
   useEffect(() => {
-    let newColumns = columns.map((column) => column.name);
+    let newColumns = columns?.map((column) => column.name);
     setColumnNames(newColumns);
   }, [columns]);
 

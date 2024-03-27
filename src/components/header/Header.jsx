@@ -25,7 +25,6 @@ function Header() {
 
   const openDeleteModal = () => {
     setIsDeleteOpen(true);
-    setIsEditOpen(false);
   };
 
   const closeDeleteModal = () => {
@@ -33,7 +32,14 @@ function Header() {
   };
 
   const handleDelete = () => {
-    setBoards(boards.filter((board) => board.isActive !== true));
+    const remainingBoards = boards.filter((board) => board.isActive !== true);
+
+    if (remainingBoards.length > 0) {
+      remainingBoards[0].isActive = true;
+    }
+
+    setBoards(remainingBoards);
+
     closeDeleteModal();
   };
 
