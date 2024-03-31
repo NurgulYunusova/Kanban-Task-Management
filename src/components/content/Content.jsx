@@ -13,8 +13,11 @@ function Content() {
   const columns = board?.columns;
 
   const [modalVisible, setModalVisible] = useState(false);
+  const [taskModalVisible, setTaskModalVisible] = useState(false);
   const [columnNames, setColumnNames] = useState([]);
   const [boardName, setBoardName] = useState("");
+
+  const modalRef = useRef();
 
   useEffect(() => {
     setBoardName(board?.name);
@@ -24,8 +27,6 @@ function Content() {
     let newColumns = columns?.map((column) => column.name);
     setColumnNames(newColumns);
   }, [columns]);
-
-  const modalRef = useRef();
 
   const handleNewColumn = () => {
     setModalVisible(true);
@@ -71,17 +72,21 @@ function Content() {
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
         setModalVisible(false);
+        setTaskModalVisible(false);
+
+        setBoardName(board?.name || "");
+        setColumnNames(columns?.map((column) => column.name) || []);
       }
     };
 
-    if (modalVisible) {
+    if (modalVisible || taskModalVisible) {
       window.addEventListener("mousedown", handleClickOutside);
     }
 
     return () => {
       window.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [modalVisible]);
+  }, [modalVisible, taskModalVisible, columns, board]);
 
   return (
     <>
@@ -95,7 +100,11 @@ function Content() {
                 </h4>
                 <div className="tasks">
                   {column.tasks?.map((task, index) => (
-                    <div className="task" key={index}>
+                    <div
+                      className="task"
+                      key={index}
+                      onClick={() => setTaskModalVisible(true)}
+                    >
                       <h3>{task.title}</h3>
                       <p>
                         {
@@ -106,6 +115,136 @@ function Content() {
                       </p>
                     </div>
                   ))}
+                  {taskModalVisible && (
+                    <div className="modalBackdrop">
+                      <div className="modal" ref={modalRef}>
+                        <div className="topSection">
+                          <h3>Build UI for search</h3>
+                          {/* <div className="menu">
+                            <svg
+                              width="5"
+                              height="20"
+                              xmlns="http://www.w3.org/2000/svg"
+                              onClick={() => setIsEditOpen(!isEditOpen)}
+                            >
+                              <g fill="#828FA3" fillRule="evenodd">
+                                <circle cx="2.308" cy="2.308" r="2.308" />
+                                <circle cx="2.308" cy="10" r="2.308" />
+                                <circle cx="2.308" cy="17.692" r="2.308" />
+                              </g>
+                            </svg>
+
+                            {isEditOpen && (
+                              <div className="menuContent">
+                                <ul>
+                                  <li className="edit" onClick={handleEdit}>
+                                    Edit board
+                                  </li>
+                                  <li className="delete" onClick={deleteButton}>
+                                    Delete board
+                                  </li>
+                                </ul>
+                              </div>
+                            )}
+
+                            {editModalVisible && (
+                              <div className="modalBackdrop">
+                                <div className="modal" ref={modalRef}>
+                                  <h3>Edit board</h3>
+                                  <form onSubmit={(e) => handleSubmit(e)}>
+                                    <label htmlFor="name">Board Name</label>{" "}
+                                    <br />
+                                    <input
+                                      type="text"
+                                      name="name"
+                                      id="name"
+                                      placeholder="e.g. Web Design"
+                                      value={boardName}
+                                      onChange={(e) =>
+                                        setBoardName(e.target.value)
+                                      }
+                                      required
+                                    />{" "}
+                                    <br />
+                                    <label htmlFor="boardColumns">
+                                      Board Columns
+                                    </label>
+                                    {columnNames.map((columnName, index) => (
+                                      <div key={index}>
+                                        <input
+                                          type="text"
+                                          name={`column-${index}`}
+                                          id={`column-${index}`}
+                                          value={columnName}
+                                          onChange={(e) => {
+                                            const updatedColumns = [
+                                              ...columnNames,
+                                            ];
+                                            updatedColumns[index] =
+                                              e.target.value;
+                                            setColumnNames(updatedColumns);
+                                          }}
+                                          required
+                                        />
+                                        {
+                                          <img
+                                            src={xmark}
+                                            alt="xmark"
+                                            onClick={() => {
+                                              const updatedColumns = [
+                                                ...columnNames,
+                                              ];
+                                              updatedColumns.splice(index, 1);
+                                              setColumnNames(updatedColumns);
+                                            }}
+                                          />
+                                        }
+                                      </div>
+                                    ))}
+                                    <button
+                                      className="addNewColumnBtn"
+                                      onClick={handleAddColumn}
+                                    >
+                                      + Add New Column
+                                    </button>{" "}
+                                    <br />
+                                    <button className="saveChangesBtn">
+                                      Save Changes
+                                    </button>
+                                  </form>
+                                </div>
+                              </div>
+                            )}
+
+                            {isDeleteOpen && (
+                              <div className="deleteModal">
+                                <div className="modalContent">
+                                  <h4>Delete this board?</h4>
+                                  <p>
+                                    Are you sure you want to delete the
+                                    "Platform Launch" board? This action will
+                                    remove all columns and tasks and cannot be
+                                    reversed.
+                                  </p>
+                                  <div className="modalActions">
+                                    <button onClick={handleDelete} id="delete">
+                                      Delete
+                                    </button>
+                                    <button
+                                      onClick={closeDeleteModal}
+                                      id="cancel"
+                                    >
+                                      Cancel
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                          </div> */}
+                        </div>
+                      </div>
+                    </div>
+                  )}{" "}
                 </div>
               </div>
             ))}

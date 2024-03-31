@@ -133,6 +133,12 @@ function Header() {
       boards[activeBoardIndex].columns[columnIndex].tasks.push(newTask);
 
       setBoards([...boards]);
+
+      setTaskName("");
+      setDescription("");
+      setSubtasks(["", ""]);
+      setBoardName("");
+      setColumnNames([]);
     }
 
     setModalVisible(false);
@@ -143,6 +149,11 @@ function Header() {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
         setModalVisible(false);
         setEditModalVisible(false);
+        setTaskName("");
+        setDescription("");
+        setSubtasks(["", ""]);
+        setBoardName(board?.name || "");
+        setColumnNames(columns?.map((column) => column.name || []));
       }
     };
 

@@ -80,6 +80,11 @@ function Sidebar() {
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
         setModalVisible(false);
+
+        resetForm({
+          name: "",
+          columns: columnNames,
+        });
       }
     };
 
@@ -90,7 +95,7 @@ function Sidebar() {
     return () => {
       window.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [modalVisible]);
+  }, [modalVisible, resetForm, columnNames]);
 
   return (
     <>
