@@ -5,7 +5,7 @@
   width: 100%;
   background-color: #f4f7fd;
   padding: 85px 0 0 255px;
-  height: 100vh;
+  min-height: 100vh;
 
   &.dark {
     background-color: #20212c;
@@ -109,6 +109,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        z-index: 99;
 
         .modal {
           background-color: #fff;
@@ -116,7 +117,7 @@
           border-radius: 8px;
           width: 480px;
 
-          h3 {
+          .editHeading {
             font-size: 18px;
             margin-bottom: 15px;
           }
@@ -188,6 +189,104 @@
 
             .addNewColumnBtn {
               margin: 15px 0 25px;
+            }
+          }
+
+          .topSection {
+            @include center($justify-content: space-between);
+            margin-bottom: 25px;
+
+            h3 {
+              font-size: 18px;
+            }
+          }
+
+          .middleSection {
+            .subtasksLength {
+              font-size: 12px;
+              color: $base-color2;
+              font-weight: 700;
+              letter-spacing: 2.4px;
+              margin-bottom: 17px;
+            }
+
+            .subtasks {
+              list-style: none;
+
+              .subtask {
+                align-items: center;
+                background: #f4f7fd;
+                border-radius: 4px;
+                display: flex;
+                gap: 16px;
+                margin-top: 8px;
+                padding: 13px 12px;
+                transition: all 0.1s ease-in;
+
+                p {
+                  font-size: 12px;
+                  font-weight: 700;
+                }
+
+                .subtaskCheckbox {
+                  min-height: 16px;
+                  min-width: 16px;
+                }
+
+                input[type="checkbox"] {
+                  accent-color: #635fc7;
+                  cursor: pointer;
+                }
+
+                &:hover {
+                  background: rgba(99, 95, 199, 0.25);
+                }
+              }
+
+              .subtask.completed {
+                text-decoration: line-through;
+
+                p {
+                  color: #000112;
+                  opacity: 0.5;
+                }
+              }
+            }
+          }
+
+          .bottomSection {
+            margin-top: 15px;
+
+            label {
+              font-size: 12px;
+              color: $base-color2;
+              font-weight: 700;
+            }
+
+            #selectOption {
+              border: 1px solid rgba(130, 143, 163, 0.25);
+              font-size: 13px;
+              padding: 8px 16px;
+              height: 40px;
+              border-radius: 4px;
+              width: 100%;
+              outline: none;
+              font-family: $base-font;
+              font-weight: 500;
+              margin-top: 7px;
+              cursor: pointer;
+              -webkit-appearance: none;
+              appearance: none;
+              background-image: url("https://kanban-task-management-app.netlify.app/static/media/icon-chevron-down.77595c15c9072ba0ef8a.svg");
+              background-position: right 16px top 50%;
+              background-repeat: no-repeat;
+
+              &::placeholder {
+                font-size: 13px;
+                font-weight: 500;
+                font-family: $base-font;
+                color: #949aa248;
+              }
             }
           }
         }

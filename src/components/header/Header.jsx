@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/no-unescaped-entities */
 import { useContext, useEffect, useRef, useState } from "react";
 import "./header.scss";

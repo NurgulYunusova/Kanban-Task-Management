@@ -13,8 +13,10 @@ function Content() {
   const columns = board?.columns;
 
   const [modalVisible, setModalVisible] = useState(false);
+  const [selectedStatus, setSelectedStatus] = useState(columns[0]?.name);
   const [taskModalVisible, setTaskModalVisible] = useState(false);
   const [columnNames, setColumnNames] = useState([]);
+  const [task, setTask] = useState(null);
   const [boardName, setBoardName] = useState("");
 
   const modalRef = useRef();
@@ -68,6 +70,14 @@ function Content() {
     setModalVisible(false);
   };
 
+  const openTaskModal = (data) => {
+    setTaskModalVisible(true);
+
+    setTask(data);
+  };
+
+  console.log(task, columns);
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
@@ -103,7 +113,7 @@ function Content() {
                     <div
                       className="task"
                       key={index}
-                      onClick={() => setTaskModalVisible(true)}
+                      onClick={() => openTaskModal(task)}
                     >
                       <h3>{task.title}</h3>
                       <p>
@@ -114,27 +124,31 @@ function Content() {
                         of {task.subtasks.length} subtasks
                       </p>
                     </div>
-                  ))}
-                  {taskModalVisible && (
-                    <div className="modalBackdrop">
-                      <div className="modal" ref={modalRef}>
-                        <div className="topSection">
-                          <h3>Build UI for search</h3>
-                          {/* <div className="menu">
-                            <svg
-                              width="5"
-                              height="20"
-                              xmlns="http://www.w3.org/2000/svg"
-                              onClick={() => setIsEditOpen(!isEditOpen)}
-                            >
-                              <g fill="#828FA3" fillRule="evenodd">
-                                <circle cx="2.308" cy="2.308" r="2.308" />
-                                <circle cx="2.308" cy="10" r="2.308" />
-                                <circle cx="2.308" cy="17.692" r="2.308" />
-                              </g>
-                            </svg>
+                  ))}{" "}
+                </div>
+              </div>
+            ))}
 
-                            {isEditOpen && (
+            {taskModalVisible && (
+              <div className="modalBackdrop">
+                <div className="modal" ref={modalRef}>
+                  <div className="topSection">
+                    <h3>{task?.title}</h3>
+                    <div className="menu">
+                      <svg
+                        width="5"
+                        height="20"
+                        xmlns="http://www.w3.org/2000/svg"
+                        // onClick={() => setIsEditOpen(!isEditOpen)}
+                      >
+                        <g fill="#828FA3" fillRule="evenodd">
+                          <circle cx="2.308" cy="2.308" r="2.308" />
+                          <circle cx="2.308" cy="10" r="2.308" />
+                          <circle cx="2.308" cy="17.692" r="2.308" />
+                        </g>
+                      </svg>
+
+                      {/* {isEditOpen && (
                               <div className="menuContent">
                                 <ul>
                                   <li className="edit" onClick={handleEdit}>
@@ -239,15 +253,55 @@ function Content() {
                                   </div>
                                 </div>
                               </div>
-                            )}
-                          </div> */}
-                        </div>
-                      </div>
+                            )} */}
                     </div>
-                  )}{" "}
+                  </div>
+
+                  <div className="middleSection">
+                    <p className="subtasksLength">
+                      Subtasks (
+                      {
+                        task.subtasks.filter((subtask) => subtask.isCompleted)
+                          .length
+                      }{" "}
+                      of {task?.subtasks.length})
+                    </p>
+                    <ul className="subtasks">
+                      {task.subtasks.map((q, index) => (
+                        <li
+                          className={
+                            q.isCompleted ? "subtask completed" : "subtask"
+                          }
+                          key={index}
+                        >
+                          <input
+                            className="subtaskCheckbox"
+                            type="checkbox"
+                            checked={q.isCompleted ? true : false}
+                          ></input>
+                          <p>{q.title}</p>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="bottomSection">
+                    <label htmlFor="status">Current Status</label> <br />
+                    <select
+                      id="selectOption"
+                      onChange={(e) => setSelectedStatus(e.target.value)}
+                      defaultValue={task?.status}
+                    >
+                      {columns?.map((column, index) => (
+                        <option value={column.name} key={index}>
+                          {column.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
               </div>
-            ))}
+            )}
 
             <div className="addColumnButton" onClick={handleNewColumn}>
               <p>+ New Column</p>
@@ -256,7 +310,7 @@ function Content() {
             {modalVisible && (
               <div className="modalBackdrop">
                 <div className="modal" ref={modalRef}>
-                  <h3>Edit board</h3>
+                  <h3 className="editHeading">Edit board</h3>
                   <form onSubmit={(e) => handleSubmit(e)}>
                     <label htmlFor="name">Board Name</label> <br />
                     <input
