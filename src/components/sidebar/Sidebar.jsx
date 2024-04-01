@@ -28,8 +28,6 @@ function Sidebar() {
         columns: Yup.array().required("Column name is required"),
       }),
       onSubmit: ({ name, columns }) => {
-        console.log(name, columns);
-
         createBoards({
           name: name,
           isActive: false,

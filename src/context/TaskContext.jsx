@@ -11,7 +11,7 @@ export const TaskProvider = ({ children }) => {
     boards.push(newBoard);
   };
 
-  console.log(boards);
+  // console.log(boards);
 
   return (
     <TaskContext.Provider value={{ boards, createBoards, setBoards }}>

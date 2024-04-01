@@ -72,11 +72,18 @@ function Content() {
 
   const openTaskModal = (data) => {
     setTaskModalVisible(true);
-
     setTask(data);
   };
 
-  console.log(task, columns);
+  const handleInputClick = (index) => {
+    const updatedSubtasks = [...task.subtasks];
+
+    updatedSubtasks[index].isCompleted = !updatedSubtasks[index].isCompleted;
+
+    setTask({ ...task, subtasks: updatedSubtasks });
+  };
+
+  console.log(task);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -96,7 +103,7 @@ function Content() {
     return () => {
       window.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [modalVisible, taskModalVisible, columns, board]);
+  }, [modalVisible, taskModalVisible, selectedStatus, columns, board, task]);
 
   return (
     <>
@@ -277,7 +284,8 @@ function Content() {
                           <input
                             className="subtaskCheckbox"
                             type="checkbox"
-                            checked={q.isCompleted ? true : false}
+                            defaultChecked={q.isCompleted ? true : false}
+                            onClick={() => handleInputClick(index)}
                           ></input>
                           <p>{q.title}</p>
                         </li>
