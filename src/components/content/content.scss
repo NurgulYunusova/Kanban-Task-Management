@@ -116,10 +116,11 @@
           padding: 30px;
           border-radius: 8px;
           width: 480px;
+          max-height: 90%;
+          overflow-y: scroll;
 
-          .editHeading {
+          .taskTitle {
             font-size: 18px;
-            margin-bottom: 15px;
           }
 
           form {
@@ -131,7 +132,8 @@
               font-weight: 700;
             }
 
-            input {
+            input,
+            #selectOption {
               border: 1px solid rgba(130, 143, 163, 0.25);
               font-size: 13px;
               padding: 8px 16px;
@@ -143,6 +145,7 @@
               font-weight: 500;
               margin-top: 7px;
               margin-bottom: 7px;
+              cursor: pointer;
 
               &::placeholder {
                 font-size: 13px;
@@ -150,6 +153,29 @@
                 font-family: $base-font;
                 color: #949aa248;
               }
+            }
+
+            #selectOption {
+              -webkit-appearance: none;
+              appearance: none;
+              background-image: url("https://kanban-task-management-app.netlify.app/static/media/icon-chevron-down.77595c15c9072ba0ef8a.svg");
+              background-position: right 16px top 50%;
+              background-repeat: no-repeat;
+              margin-bottom: 25px;
+            }
+
+            #description {
+              border: 1px solid rgba(130, 143, 163, 0.25);
+              font-size: 13px;
+              padding: 8px 16px;
+              border-radius: 4px;
+              width: 100%;
+              outline: none;
+              font-family: $base-font;
+              font-weight: 500;
+              margin-top: 7px;
+              margin-bottom: 7px;
+              cursor: pointer;
             }
 
             #name {
@@ -168,6 +194,8 @@
               }
             }
 
+            .addNewSubtaskBtn,
+            .createTaskBtn,
             .addNewColumnBtn,
             .saveChangesBtn {
               width: 100%;
@@ -181,14 +209,19 @@
               border-radius: 24px;
               cursor: pointer;
               transition: all 0.2s ease-in-out;
+              font-size: 13px;
 
               &:hover {
                 background-color: #8f8ce1;
               }
             }
 
-            .addNewColumnBtn {
+            .addNewSubtaskBtn {
               margin: 15px 0 25px;
+            }
+
+            .addNewColumnBtn {
+              margin: 5px 0 25px;
             }
           }
 
@@ -196,8 +229,46 @@
             @include center($justify-content: space-between);
             margin-bottom: 25px;
 
-            h3 {
-              font-size: 18px;
+            .menu {
+              cursor: pointer;
+              position: relative;
+
+              .menuContent {
+                position: absolute;
+                right: -15px;
+                top: 30px;
+                width: 150px;
+                background-color: #fff;
+                border-radius: 8px;
+                box-shadow: 0 10px 20px rgba(54, 78, 126, 0.25);
+                color: #828fa3;
+                padding: 18px;
+
+                ul {
+                  list-style: none;
+
+                  li {
+                    font-size: 13px;
+                    font-weight: 500;
+                  }
+
+                  .delete {
+                    color: #ea5555;
+                    margin-top: 16px;
+                  }
+                }
+              }
+            }
+          }
+
+          .descriptionSection {
+            margin-bottom: 25px;
+
+            .description {
+              font-size: 13px;
+              color: $base-color2;
+              font-weight: 500;
+              line-height: 23px;
             }
           }
 
@@ -289,6 +360,10 @@
               }
             }
           }
+        }
+
+        &.editModal {
+          background-color: rgba(0, 0, 0, 0);
         }
       }
     }

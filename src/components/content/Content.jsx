@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import { useContext, useEffect, useRef, useState } from "react";
 import "./content.scss";
 import xmark from "../../assets/images/x-mark.svg";
@@ -13,22 +14,35 @@ function Content() {
   const columns = board?.columns;
 
   const [modalVisible, setModalVisible] = useState(false);
-  const [selectedStatus, setSelectedStatus] = useState(columns[0]?.name);
+  const [selectedStatus, setSelectedStatus] = useState("");
   const [taskModalVisible, setTaskModalVisible] = useState(false);
   const [columnNames, setColumnNames] = useState([]);
   const [task, setTask] = useState(null);
   const [boardName, setBoardName] = useState("");
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  // const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [menuModalVisible, setMenuModalVisible] = useState(false);
+  const [taskName, setTaskName] = useState("");
+  const [description, setDescription] = useState("");
+  const [subtasks, setSubtasks] = useState([]);
 
   const modalRef = useRef();
 
   useEffect(() => {
     setBoardName(board?.name);
-  }, [board]);
+    setSelectedStatus(columns[0]?.name);
+  }, [board, columns]);
 
   useEffect(() => {
     let newColumns = columns?.map((column) => column.name);
     setColumnNames(newColumns);
   }, [columns]);
+
+  useEffect(() => {
+    setTaskName(task?.title);
+    setDescription(task?.description);
+    setSubtasks(task?.subtasks.map((q) => q.title));
+  }, [task]);
 
   const handleNewColumn = () => {
     setModalVisible(true);
@@ -83,13 +97,82 @@ function Content() {
     setTask({ ...task, subtasks: updatedSubtasks });
   };
 
-  console.log(task);
+  const handleAddSubtask = () => {
+    setSubtasks([...subtasks, ""]);
+  };
+
+  const handleInputChange = (index, e) => {
+    const updatedSubtasks = [...subtasks];
+    updatedSubtasks[index] = e.target.value;
+    setSubtasks(updatedSubtasks);
+  };
+
+  // const deleteButton = () => {
+  //   setIsDeleteOpen(true);
+  //   setIsEditOpen(false);
+  // };
+
+  const editButton = () => {
+    setIsEditOpen(true);
+    setMenuModalVisible(false);
+  };
+
+  // const closeDeleteModal = () => {
+  //   setIsDeleteOpen(false);
+  // };
+
+  // const handleDelete = () => {
+  //   const remainingBoards = boards.filter((board) => board.isActive !== true);
+
+  //   if (remainingBoards.length > 0) {
+  //     remainingBoards[0].isActive = true;
+  //   }
+
+  //   setBoards(remainingBoards);
+
+  //   closeDeleteModal();
+  // };
+
+  const handleTaskSubmit = (e) => {
+    e.preventDefault();
+
+    const subtaskObjects = subtasks.map((subtask) => ({
+      title: subtask,
+      isCompleted: false,
+    }));
+
+    const newTask = {
+      title: taskName,
+      status: selectedStatus,
+      subtasks: subtaskObjects,
+    };
+
+    const columnIndex = boards[activeBoardIndex].columns.findIndex(
+      (column) => column.name === selectedStatus
+    );
+
+    if (columnIndex !== -1) {
+      boards[activeBoardIndex].columns[columnIndex].tasks.push(newTask);
+
+      setBoards([...boards]);
+
+      setTaskName("");
+      setDescription("");
+      setSubtasks(["", ""]);
+      setBoardName("");
+      setColumnNames([]);
+    }
+
+    setIsEditOpen(false);
+    setModalVisible(false);
+  };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
         setModalVisible(false);
         setTaskModalVisible(false);
+        setIsEditOpen(false);
 
         setBoardName(board?.name || "");
         setColumnNames(columns?.map((column) => column.name) || []);
@@ -140,13 +223,13 @@ function Content() {
               <div className="modalBackdrop">
                 <div className="modal" ref={modalRef}>
                   <div className="topSection">
-                    <h3>{task?.title}</h3>
+                    <h3 className="taskTitle">{task?.title}</h3>
                     <div className="menu">
                       <svg
                         width="5"
                         height="20"
                         xmlns="http://www.w3.org/2000/svg"
-                        // onClick={() => setIsEditOpen(!isEditOpen)}
+                        onClick={() => setMenuModalVisible(!menuModalVisible)}
                       >
                         <g fill="#828FA3" fillRule="evenodd">
                           <circle cx="2.308" cy="2.308" r="2.308" />
@@ -155,114 +238,128 @@ function Content() {
                         </g>
                       </svg>
 
-                      {/* {isEditOpen && (
-                              <div className="menuContent">
-                                <ul>
-                                  <li className="edit" onClick={handleEdit}>
-                                    Edit board
-                                  </li>
-                                  <li className="delete" onClick={deleteButton}>
-                                    Delete board
-                                  </li>
-                                </ul>
-                              </div>
-                            )}
+                      {menuModalVisible && (
+                        <div className="menuContent">
+                          <ul>
+                            <li className="edit" onClick={() => editButton()}>
+                              Edit task
+                            </li>
+                            <li className="delete">Delete task</li>
+                          </ul>
+                        </div>
+                      )}
 
-                            {editModalVisible && (
-                              <div className="modalBackdrop">
-                                <div className="modal" ref={modalRef}>
-                                  <h3>Edit board</h3>
-                                  <form onSubmit={(e) => handleSubmit(e)}>
-                                    <label htmlFor="name">Board Name</label>{" "}
-                                    <br />
-                                    <input
-                                      type="text"
-                                      name="name"
-                                      id="name"
-                                      placeholder="e.g. Web Design"
-                                      value={boardName}
-                                      onChange={(e) =>
-                                        setBoardName(e.target.value)
-                                      }
-                                      required
-                                    />{" "}
-                                    <br />
-                                    <label htmlFor="boardColumns">
-                                      Board Columns
-                                    </label>
-                                    {columnNames.map((columnName, index) => (
-                                      <div key={index}>
-                                        <input
-                                          type="text"
-                                          name={`column-${index}`}
-                                          id={`column-${index}`}
-                                          value={columnName}
-                                          onChange={(e) => {
-                                            const updatedColumns = [
-                                              ...columnNames,
-                                            ];
-                                            updatedColumns[index] =
-                                              e.target.value;
-                                            setColumnNames(updatedColumns);
-                                          }}
-                                          required
-                                        />
-                                        {
-                                          <img
-                                            src={xmark}
-                                            alt="xmark"
-                                            onClick={() => {
-                                              const updatedColumns = [
-                                                ...columnNames,
-                                              ];
-                                              updatedColumns.splice(index, 1);
-                                              setColumnNames(updatedColumns);
-                                            }}
-                                          />
-                                        }
-                                      </div>
-                                    ))}
-                                    <button
-                                      className="addNewColumnBtn"
-                                      onClick={handleAddColumn}
-                                    >
-                                      + Add New Column
-                                    </button>{" "}
-                                    <br />
-                                    <button className="saveChangesBtn">
-                                      Save Changes
-                                    </button>
-                                  </form>
+                      {isEditOpen && (
+                        <div className="modalBackdrop editModal">
+                          <div className="modal" ref={modalRef}>
+                            <h3>Edit Task</h3>
+                            <form onSubmit={(e) => handleTaskSubmit(e)}>
+                              <label htmlFor="name">Task Name</label> <br />
+                              <input
+                                type="text"
+                                name="name"
+                                id="name"
+                                placeholder="e.g. Take coffee break"
+                                onChange={(e) => setTaskName(e.target.value)}
+                                value={taskName}
+                                required
+                              />{" "}
+                              <br />
+                              <label htmlFor="description">
+                                Description
+                              </label>{" "}
+                              <br />
+                              <textarea
+                                name="description"
+                                id="description"
+                                rows="7"
+                                onChange={(e) => setDescription(e.target.value)}
+                                value={description}
+                              ></textarea>
+                              <label htmlFor="boardColumns">Subtasks</label>
+                              {subtasks.map((subtask, index) => (
+                                <div key={index}>
+                                  <input
+                                    type="text"
+                                    name={`subtask-${index}`}
+                                    id={`subtask-${index}`}
+                                    value={subtask || ""}
+                                    onChange={(event) =>
+                                      handleInputChange(index, event)
+                                    }
+                                    required
+                                  />
+                                  <img
+                                    src={xmark}
+                                    alt="xmark"
+                                    onClick={() => {
+                                      const updatedSubtasks = [...subtasks];
+                                      updatedSubtasks.splice(index, 1);
+                                      setSubtasks(updatedSubtasks);
+                                    }}
+                                  />
                                 </div>
-                              </div>
-                            )}
+                              ))}
+                              <button
+                                className="addNewSubtaskBtn"
+                                onClick={handleAddSubtask}
+                              >
+                                + Add New Subtask
+                              </button>{" "}
+                              <br />
+                              <label htmlFor="status">
+                                Current Status
+                              </label>{" "}
+                              <br />
+                              <select
+                                id="selectOption"
+                                value={selectedStatus}
+                                onChange={(e) =>
+                                  setSelectedStatus(e.target.value)
+                                }
+                              >
+                                {columns?.map((column, index) => (
+                                  <option value={column.name} key={index}>
+                                    {column.name}
+                                  </option>
+                                ))}
+                              </select>
+                              <button className="createTaskBtn">
+                                Create Task
+                              </button>
+                            </form>
+                          </div>
+                        </div>
+                      )}
 
-                            {isDeleteOpen && (
-                              <div className="deleteModal">
-                                <div className="modalContent">
-                                  <h4>Delete this board?</h4>
-                                  <p>
-                                    Are you sure you want to delete the
-                                    "Platform Launch" board? This action will
-                                    remove all columns and tasks and cannot be
-                                    reversed.
-                                  </p>
-                                  <div className="modalActions">
-                                    <button onClick={handleDelete} id="delete">
-                                      Delete
-                                    </button>
-                                    <button
-                                      onClick={closeDeleteModal}
-                                      id="cancel"
-                                    >
-                                      Cancel
-                                    </button>
-                                  </div>
-                                </div>
-                              </div>
-                            )} */}
+                      {/* {isDeleteOpen && (
+                        <div className="deleteModal">
+                          <div className="modalContent">
+                            <h4>Delete this board?</h4>
+                            <p>
+                              Are you sure you want to delete the "Platform
+                              Launch" board? This action will remove all columns
+                              and tasks and cannot be reversed.
+                            </p>
+                            <div className="modalActions">
+                              <button onClick={handleDelete} id="delete">
+                                Delete
+                              </button>
+                              <button onClick={closeDeleteModal} id="cancel">
+                                Cancel
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      )} */}
                     </div>
                   </div>
+
+                  {description && (
+                    <div className="descriptionSection">
+                      <p className="description">{description}</p>
+                    </div>
+                  )}
 
                   <div className="middleSection">
                     <p className="subtasksLength">
