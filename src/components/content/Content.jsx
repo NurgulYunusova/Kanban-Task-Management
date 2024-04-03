@@ -20,7 +20,7 @@ function Content() {
   const [task, setTask] = useState(null);
   const [boardName, setBoardName] = useState("");
   const [isEditOpen, setIsEditOpen] = useState(false);
-  // const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [menuModalVisible, setMenuModalVisible] = useState(false);
   const [taskName, setTaskName] = useState("");
   const [description, setDescription] = useState("");
@@ -107,31 +107,36 @@ function Content() {
     setSubtasks(updatedSubtasks);
   };
 
-  // const deleteButton = () => {
-  //   setIsDeleteOpen(true);
-  //   setIsEditOpen(false);
-  // };
+  const deleteButton = () => {
+    setIsDeleteOpen(true);
+    setMenuModalVisible(false);
+  };
 
   const editButton = () => {
     setIsEditOpen(true);
     setMenuModalVisible(false);
   };
 
-  // const closeDeleteModal = () => {
-  //   setIsDeleteOpen(false);
-  // };
+  const closeDeleteModal = () => {
+    setIsDeleteOpen(false);
+  };
 
-  // const handleDelete = () => {
-  //   const remainingBoards = boards.filter((board) => board.isActive !== true);
+  const handleDelete = () => {
+    const updatedColumns = columns.map((column) => ({
+      ...column,
+      tasks: column.tasks.filter((t) => t.title !== task.title),
+    }));
 
-  //   if (remainingBoards.length > 0) {
-  //     remainingBoards[0].isActive = true;
-  //   }
+    const updatedBoards = boards.map((board, index) => ({
+      ...board,
+      columns: index === activeBoardIndex ? updatedColumns : board.columns,
+    }));
 
-  //   setBoards(remainingBoards);
+    setBoards(updatedBoards);
 
-  //   closeDeleteModal();
-  // };
+    closeDeleteModal();
+    setTaskModalVisible(false);
+  };
 
   const handleTaskSubmit = (e) => {
     e.preventDefault();
@@ -244,7 +249,12 @@ function Content() {
                             <li className="edit" onClick={() => editButton()}>
                               Edit task
                             </li>
-                            <li className="delete">Delete task</li>
+                            <li
+                              className="delete"
+                              onClick={() => deleteButton()}
+                            >
+                              Delete task
+                            </li>
                           </ul>
                         </div>
                       )}
@@ -332,14 +342,14 @@ function Content() {
                         </div>
                       )}
 
-                      {/* {isDeleteOpen && (
+                      {isDeleteOpen && (
                         <div className="deleteModal">
                           <div className="modalContent">
                             <h4>Delete this board?</h4>
                             <p>
-                              Are you sure you want to delete the "Platform
-                              Launch" board? This action will remove all columns
-                              and tasks and cannot be reversed.
+                              Are you sure you want to delete the "{taskName}"
+                              task and its subtasks? This action cannot be
+                              reversed.
                             </p>
                             <div className="modalActions">
                               <button onClick={handleDelete} id="delete">
@@ -351,7 +361,7 @@ function Content() {
                             </div>
                           </div>
                         </div>
-                      )} */}
+                      )}
                     </div>
                   </div>
 
