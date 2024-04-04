@@ -4,10 +4,13 @@ import "./content.scss";
 import xmark from "../../assets/images/x-mark.svg";
 import { TaskContext } from "../../context/TaskContext";
 import { DarkModeContext } from "../../context/DarkModeContext";
+import { HideSidebarContext } from "../../context/HideSidebarContext";
+import showSidebar from "../../assets/images/show-sidebar.svg";
 
 function Content() {
   const { boards, setBoards } = useContext(TaskContext);
   const { darkMode } = useContext(DarkModeContext);
+  const { isSidebarHidden, hideSidebar } = useContext(HideSidebarContext);
 
   const activeBoardIndex = boards.findIndex((b) => b.isActive);
   const board = boards?.find((board) => board.isActive == true);
@@ -190,11 +193,11 @@ function Content() {
 
           if (taskIndex !== -1) {
             const updatedTask = { ...task, status: selectedStatus };
-            board.columns[columnIndex].tasks.splice(taskIndex, 1);
+            columns[columnIndex].tasks.splice(taskIndex, 1);
             const newColumnIndex = columns.findIndex(
               (col) => col.name === selectedStatus
             );
-            board.columns[newColumnIndex].tasks.push(updatedTask);
+            columns[newColumnIndex].tasks.push(updatedTask);
             setBoards(updatedBoards);
           }
         }
@@ -216,11 +219,23 @@ function Content() {
     activeBoardIndex,
     setBoards,
     task,
+    columns,
   ]);
 
   return (
     <>
-      <div className={darkMode ? "content dark" : "content light"}>
+      <div
+        className={`content ${darkMode ? "dark" : "light"} ${
+          isSidebarHidden ? "hide" : ""
+        }`}
+      >
+        {isSidebarHidden ? (
+          <div className="showSidebar" onClick={hideSidebar}>
+            <img src={showSidebar} alt="Show Sidebar" />
+          </div>
+        ) : (
+          ""
+        )}
         <div className="contentContainer">
           <div className="columns">
             {columns?.map((column, index) => (

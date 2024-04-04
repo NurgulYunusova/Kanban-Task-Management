@@ -6,10 +6,12 @@ import { TaskContext } from "../../context/TaskContext";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { DarkModeContext } from "../../context/DarkModeContext";
+import { HideSidebarContext } from "../../context/HideSidebarContext";
 
 function Sidebar() {
   const { createBoards, boards, setBoards } = useContext(TaskContext);
   const { darkMode, toggleDarkMode } = useContext(DarkModeContext);
+  const { isSidebarHidden, hideSidebar } = useContext(HideSidebarContext);
 
   const [modalVisible, setModalVisible] = useState(false);
   const [columnNames, setColumnNames] = useState(["Todo", "Doing"]);
@@ -97,7 +99,11 @@ function Sidebar() {
 
   return (
     <>
-      <div className={darkMode ? "sidebar dark" : "sidebar light"}>
+      <div
+        className={`sidebar ${darkMode ? "dark" : "light"} ${
+          isSidebarHidden ? "hide" : ""
+        }`}
+      >
         <div className="sidebarContainer">
           <div className="topSection">
             <h3 className="allBoards">All boards ({boards.length})</h3>
@@ -215,7 +221,7 @@ function Sidebar() {
               </svg>
             </div>
 
-            <div className="hideSidebarButton">
+            <div className="hideSidebarButton" onClick={hideSidebar}>
               <button>
                 <svg width="18" height="16" xmlns="http://www.w3.org/2000/svg">
                   <path

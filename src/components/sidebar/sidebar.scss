@@ -22,6 +22,10 @@
     }
   }
 
+  &.hide {
+    display: none;
+  }
+
   &Container {
     padding: 18px 18px 0 0;
     height: 100%;
