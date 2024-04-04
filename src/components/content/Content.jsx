@@ -179,8 +179,25 @@ function Content() {
         setTaskModalVisible(false);
         setIsEditOpen(false);
 
-        setBoardName(board?.name || "");
-        setColumnNames(columns?.map((column) => column.name) || []);
+        if (task && selectedStatus !== task.status) {
+          const updatedBoards = [...boards];
+          const columnIndex = columns.findIndex(
+            (col) => col.name === task.status
+          );
+          const taskIndex = columns[columnIndex].tasks.findIndex(
+            (t) => t.title === task.title
+          );
+
+          if (taskIndex !== -1) {
+            const updatedTask = { ...task, status: selectedStatus };
+            board.columns[columnIndex].tasks.splice(taskIndex, 1);
+            const newColumnIndex = columns.findIndex(
+              (col) => col.name === selectedStatus
+            );
+            board.columns[newColumnIndex].tasks.push(updatedTask);
+            setBoards(updatedBoards);
+          }
+        }
       }
     };
 
@@ -191,7 +208,15 @@ function Content() {
     return () => {
       window.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [modalVisible, taskModalVisible, selectedStatus, columns, board, task]);
+  }, [
+    modalVisible,
+    taskModalVisible,
+    selectedStatus,
+    boards,
+    activeBoardIndex,
+    setBoards,
+    task,
+  ]);
 
   return (
     <>
