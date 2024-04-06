@@ -158,15 +158,22 @@ function Sidebar() {
                       onChange={handleChange}
                       value={values.name}
                     />
-                    <p
+                    <div
                       style={{
-                        color: "red",
-                        fontSize: "12px",
+                        height: "10px",
                         marginTop: "-10px",
                       }}
                     >
-                      {errors?.name}
-                    </p>
+                      <p
+                        style={{
+                          color: "red",
+                          fontSize: "10px",
+                          marginTop: "-10px",
+                        }}
+                      >
+                        {errors?.name}
+                      </p>
+                    </div>
                     <label htmlFor="boardColumns">Board Columns</label>
                     {columnNames.map((columnName, index) => (
                       <div key={index}>
@@ -194,15 +201,22 @@ function Sidebar() {
                             />
                           }
                         </div>
-                        <p
+                        <div
                           style={{
-                            color: "red",
-                            fontSize: "12px",
-                            marginTop: "-3px",
+                            height: "10px",
+                            marginTop: "0px",
                           }}
                         >
-                          {errors?.columns && errors.columns[index]}
-                        </p>
+                          <p
+                            style={{
+                              color: "red",
+                              fontSize: "10px",
+                              marginTop: "-3px",
+                            }}
+                          >
+                            {errors?.columns && errors.columns[index]}
+                          </p>
+                        </div>
                       </div>
                     ))}
                     <button
