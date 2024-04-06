@@ -19,7 +19,7 @@ function Sidebar() {
 
   const modalRef = useRef();
 
-  const { handleSubmit, handleChange, values, setValues, resetForm } =
+  const { handleSubmit, handleChange, values, setValues, resetForm, errors } =
     useFormik({
       initialValues: {
         name: "",
@@ -27,7 +27,9 @@ function Sidebar() {
       },
       validationSchema: Yup.object({
         name: Yup.string().required("Board name is required"),
-        columns: Yup.array().required("Column name is required"),
+        columns: Yup.array()
+          .of(Yup.string().required("Column name is required"))
+          .required("At least one column is required"),
       }),
       onSubmit: ({ name, columns }) => {
         createBoards({
@@ -156,32 +158,51 @@ function Sidebar() {
                       onChange={handleChange}
                       value={values.name}
                     />
-                    <br />
+                    <p
+                      style={{
+                        color: "red",
+                        fontSize: "12px",
+                        marginTop: "-10px",
+                      }}
+                    >
+                      {errors?.name}
+                    </p>
                     <label htmlFor="boardColumns">Board Columns</label>
                     {columnNames.map((columnName, index) => (
                       <div key={index}>
-                        <input
-                          type="text"
-                          name={`column-${index}`}
-                          id={`column-${index}`}
-                          value={columnName}
-                          onChange={(e) => {
-                            const updatedColumns = [...columnNames];
-                            updatedColumns[index] = e.target.value;
-                            setColumnNames(updatedColumns);
-                          }}
-                        />
-                        {
-                          <img
-                            src={xmark}
-                            alt="xmark"
-                            onClick={() => {
+                        <div className="input">
+                          <input
+                            type="text"
+                            name={`column-${index}`}
+                            id={`column-${index}`}
+                            value={columnName}
+                            onChange={(e) => {
                               const updatedColumns = [...columnNames];
-                              updatedColumns.splice(index, 1);
+                              updatedColumns[index] = e.target.value;
                               setColumnNames(updatedColumns);
                             }}
                           />
-                        }
+                          {
+                            <img
+                              src={xmark}
+                              alt="xmark"
+                              onClick={() => {
+                                const updatedColumns = [...columnNames];
+                                updatedColumns.splice(index, 1);
+                                setColumnNames(updatedColumns);
+                              }}
+                            />
+                          }
+                        </div>
+                        <p
+                          style={{
+                            color: "red",
+                            fontSize: "12px",
+                            marginTop: "-3px",
+                          }}
+                        >
+                          {errors?.columns && errors.columns[index]}
+                        </p>
                       </div>
                     ))}
                     <button
