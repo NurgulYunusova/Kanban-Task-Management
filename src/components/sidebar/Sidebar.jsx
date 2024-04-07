@@ -26,9 +26,9 @@ function Sidebar() {
         columns: [],
       },
       validationSchema: Yup.object({
-        name: Yup.string().required("Board name is required"),
+        name: Yup.string().required("Can't be empty"),
         columns: Yup.array()
-          .of(Yup.string().required("Column name is required"))
+          .of(Yup.string().required("Can't be empty"))
           .required("At least one column is required"),
       }),
       onSubmit: ({ name, columns }) => {
