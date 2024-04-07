@@ -115,6 +115,13 @@ function Header() {
   const handleTaskSubmit = (e) => {
     e.preventDefault();
 
+    if (
+      taskName.trim().length === 0 ||
+      subtasks.some((subtask) => subtask.trim().length === 0)
+    ) {
+      return;
+    }
+
     const subtaskObjects = subtasks.map((subtask) => ({
       title: subtask,
       isCompleted: false,
@@ -210,9 +217,27 @@ function Header() {
                       placeholder="e.g. Take coffee break"
                       onChange={(e) => setTaskName(e.target.value)}
                       value={taskName}
-                      required
-                    />{" "}
-                    <br />
+                    />
+                    {taskName.length === 0 ? (
+                      <div
+                        style={{
+                          height: "10px",
+                          marginTop: "-10px",
+                        }}
+                      >
+                        <p
+                          style={{
+                            color: "red",
+                            fontSize: "10px",
+                            marginTop: "0px",
+                          }}
+                        >
+                          Can't be empty
+                        </p>
+                      </div>
+                    ) : (
+                      ""
+                    )}
                     <label htmlFor="description">Description</label> <br />
                     <textarea
                       name="description"
@@ -224,23 +249,51 @@ function Header() {
                     <label htmlFor="boardColumns">Subtasks</label>
                     {subtasks.map((subtask, index) => (
                       <div key={index}>
-                        <input
-                          type="text"
-                          name={`subtask-${index}`}
-                          id={`subtask-${index}`}
-                          value={subtask || ""}
-                          onChange={(event) => handleInputChange(index, event)}
-                          required
-                        />
-                        <img
-                          src={xmark}
-                          alt="xmark"
-                          onClick={() => {
-                            const updatedSubtasks = [...subtasks];
-                            updatedSubtasks.splice(index, 1);
-                            setSubtasks(updatedSubtasks);
-                          }}
-                        />
+                        <div className="input">
+                          <input
+                            type="text"
+                            name={`subtask-${index}`}
+                            id={`subtask-${index}`}
+                            value={subtask || ""}
+                            onChange={(event) =>
+                              handleInputChange(index, event)
+                            }
+                          />
+                          <img
+                            src={xmark}
+                            alt="xmark"
+                            onClick={() => {
+                              const updatedSubtasks = [...subtasks];
+                              updatedSubtasks.splice(index, 1);
+                              setSubtasks(updatedSubtasks);
+                            }}
+                          />
+                        </div>
+                        {subtask.trim().length == 0 ? (
+                          <div
+                            style={{
+                              height: "10px",
+                              marginTop: "-3px",
+                            }}
+                          >
+                            <p
+                              style={{
+                                color: "red",
+                                fontSize: "10px",
+                                marginTop: "0",
+                              }}
+                            >
+                              Can't be empty
+                            </p>
+                          </div>
+                        ) : (
+                          <div
+                            style={{
+                              height: "10px",
+                              marginTop: "-3px",
+                            }}
+                          ></div>
+                        )}
                       </div>
                     ))}
                     <button
