@@ -71,6 +71,13 @@ function Header() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    if (
+      boardName.trim().length === 0 ||
+      columnNames.some((column) => column.trim().length === 0)
+    ) {
+      return;
+    }
+
     const updatedBoards = [...boards];
     const activeBoard = updatedBoards[activeBoardIndex];
 
@@ -361,35 +368,79 @@ function Header() {
                         placeholder="e.g. Web Design"
                         value={boardName}
                         onChange={(e) => setBoardName(e.target.value)}
-                        required
-                      />{" "}
-                      <br />
+                      />
+                      {boardName.length === 0 ? (
+                        <div
+                          style={{
+                            height: "10px",
+                            marginTop: "-10px",
+                          }}
+                        >
+                          <p
+                            style={{
+                              color: "red",
+                              fontSize: "10px",
+                              marginTop: "0px",
+                            }}
+                          >
+                            Can't be empty
+                          </p>
+                        </div>
+                      ) : (
+                        ""
+                      )}
                       <label htmlFor="boardColumns">Board Columns</label>
                       {columnNames.map((columnName, index) => (
                         <div key={index}>
-                          <input
-                            type="text"
-                            name={`column-${index}`}
-                            id={`column-${index}`}
-                            value={columnName}
-                            onChange={(e) => {
-                              const updatedColumns = [...columnNames];
-                              updatedColumns[index] = e.target.value;
-                              setColumnNames(updatedColumns);
-                            }}
-                            required
-                          />
-                          {
-                            <img
-                              src={xmark}
-                              alt="xmark"
-                              onClick={() => {
+                          <div className="input">
+                            <input
+                              type="text"
+                              name={`column-${index}`}
+                              id={`column-${index}`}
+                              value={columnName}
+                              onChange={(e) => {
                                 const updatedColumns = [...columnNames];
-                                updatedColumns.splice(index, 1);
+                                updatedColumns[index] = e.target.value;
                                 setColumnNames(updatedColumns);
                               }}
                             />
-                          }
+                            {
+                              <img
+                                src={xmark}
+                                alt="xmark"
+                                onClick={() => {
+                                  const updatedColumns = [...columnNames];
+                                  updatedColumns.splice(index, 1);
+                                  setColumnNames(updatedColumns);
+                                }}
+                              />
+                            }
+                          </div>
+                          {columnName.trim().length == 0 ? (
+                            <div
+                              style={{
+                                height: "10px",
+                                marginTop: "-3px",
+                              }}
+                            >
+                              <p
+                                style={{
+                                  color: "red",
+                                  fontSize: "10px",
+                                  marginTop: "0",
+                                }}
+                              >
+                                Can't be empty
+                              </p>
+                            </div>
+                          ) : (
+                            <div
+                              style={{
+                                height: "10px",
+                                marginTop: "-3px",
+                              }}
+                            ></div>
+                          )}
                         </div>
                       ))}
                       <button
