@@ -450,7 +450,9 @@ function Header() {
                         + Add New Column
                       </button>{" "}
                       <br />
-                      <button className="saveChangesBtn">Save Changes</button>
+                      <button className="saveChangesBtn" type="submit">
+                        Save Changes
+                      </button>
                     </form>
                   </div>
                 </div>
