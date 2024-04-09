@@ -256,6 +256,7 @@ function Content() {
                       className="task"
                       key={index}
                       onClick={() => openTaskModal(task)}
+                      draggable
                     >
                       <h3>{task.title}</h3>
                       <p>

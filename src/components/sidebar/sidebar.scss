@@ -26,6 +26,31 @@
           }
         }
 
+        .modalBackdrop {
+          .modal {
+            background-color: #2b2c37;
+
+            h3,
+            label {
+              color: #fff;
+            }
+
+            input {
+              background-color: #2b2c37;
+              color: #fff;
+            }
+
+            .addNewColumnBtn {
+              background-color: #fff;
+              color: $base-color1;
+
+              &:hover {
+                background-color: #fff;
+              }
+            }
+          }
+        }
+
         .createNew:hover {
           background-color: #fff;
         }
@@ -170,7 +195,7 @@
 
               &::placeholder {
                 font-size: 13px;
-                font-weight: 500;
+                font-weight: 600;
                 font-family: $base-font;
                 color: #949aa248;
               }
