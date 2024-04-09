@@ -250,6 +250,7 @@ function Header() {
                       name="description"
                       id="description"
                       rows="7"
+                      placeholder="e.g. It's always good to take a break. This  15 minute break will  recharge the batteries  a little."
                       onChange={(e) => setDescription(e.target.value)}
                       value={description}
                     ></textarea>

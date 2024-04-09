@@ -21,6 +21,58 @@ header {
       .middleSide h3 {
         color: #fff;
       }
+
+      .rightSide {
+        .menu {
+          .menuContent {
+            background-color: #20212c;
+          }
+
+          .modalBackdrop .modal {
+            background-color: #2b2c37;
+
+            h3,
+            label {
+              color: #fff;
+            }
+
+            input,
+            #description,
+            #selectOption {
+              background-color: #2b2c37;
+              color: #fff;
+            }
+
+            .addNewSubtaskBtn,
+            .addNewColumnBtn {
+              background-color: #fff;
+              color: $base-color1;
+
+              &:hover {
+                background-color: #fff;
+              }
+            }
+          }
+
+          .deleteModal .modalContent {
+            background-color: #2b2c37;
+
+            p {
+              color: $base-color2;
+            }
+
+            .modalActions {
+              #cancel {
+                background-color: #fff;
+
+                &:hover {
+                  background-color: #fff;
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 
@@ -123,7 +175,7 @@ header {
 
               &::placeholder {
                 font-size: 13px;
-                font-weight: 500;
+                font-weight: 600;
                 font-family: $base-font;
                 color: #949aa248;
               }
@@ -150,6 +202,13 @@ header {
               margin-top: 7px;
               margin-bottom: 7px;
               cursor: pointer;
+
+              &::placeholder {
+                font-size: 13px;
+                font-weight: 600;
+                font-family: $base-font;
+                color: #949aa248;
+              }
             }
 
             #name {
@@ -229,72 +288,72 @@ header {
             }
           }
         }
-      }
 
-      .deleteModal {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        .deleteModal {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.5);
+          display: flex;
+          justify-content: center;
+          align-items: center;
 
-        .modalContent {
-          background-color: #fff;
-          padding: 32px;
-          border-radius: 8px;
-          width: 480px;
-          max-height: 90%;
-          overflow-y: scroll;
+          .modalContent {
+            background-color: #fff;
+            padding: 32px;
+            border-radius: 8px;
+            width: 480px;
+            max-height: 90%;
+            overflow-y: scroll;
 
-          h4 {
-            font-size: 18px;
-            color: #ea5555;
-          }
+            h4 {
+              font-size: 18px;
+              color: #ea5555;
+            }
 
-          p {
-            font-size: 13px;
-            margin: 24px 0;
-            font-weight: 500;
-            line-height: 23px;
-          }
-
-          .modalActions {
-            display: flex;
-            gap: 16px;
-
-            #delete,
-            #cancel {
-              width: 50%;
-              padding: 12px;
+            p {
               font-size: 13px;
-              font-weight: 700;
-              border: transparent;
-              outline: none;
-              border-radius: 25px;
-              font-family: $base-font;
-              cursor: pointer;
-              transition: all 0.2s ease-in-out;
+              margin: 24px 0;
+              font-weight: 500;
+              line-height: 23px;
             }
 
-            #delete {
-              background-color: #ea5555;
-              color: #fff;
+            .modalActions {
+              display: flex;
+              gap: 16px;
 
-              &:hover {
-                background-color: #ea555584;
+              #delete,
+              #cancel {
+                width: 50%;
+                padding: 12px;
+                font-size: 13px;
+                font-weight: 700;
+                border: transparent;
+                outline: none;
+                border-radius: 25px;
+                font-family: $base-font;
+                cursor: pointer;
+                transition: all 0.2s ease-in-out;
               }
-            }
 
-            #cancel {
-              background-color: rgba(99, 95, 199, 0.1);
-              color: #635fc7;
+              #delete {
+                background-color: #ea5555;
+                color: #fff;
 
-              &:hover {
-                background-color: #8f8ce154;
+                &:hover {
+                  background-color: #ff9898;
+                }
+              }
+
+              #cancel {
+                background-color: rgba(99, 95, 199, 0.1);
+                color: #635fc7;
+
+                &:hover {
+                  background-color: #8f8ce154;
+                }
               }
             }
           }
