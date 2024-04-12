@@ -27,6 +27,12 @@
         );
       }
     }
+
+    &.hide {
+      .showSidebar {
+        background-color: #2b2c37;
+      }
+    }
   }
 
   &.hide {
@@ -46,7 +52,7 @@
       transition: all 0.2s ease-in;
 
       &:hover {
-        background-color: #625fc7ac;
+        background-color: #a8a4ff;
       }
     }
   }
