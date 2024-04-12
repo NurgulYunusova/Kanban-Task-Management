@@ -28,32 +28,6 @@ header {
             background-color: #20212c;
           }
 
-          .modalBackdrop .modal {
-            background-color: #2b2c37;
-
-            h3,
-            label {
-              color: #fff;
-            }
-
-            input,
-            #description,
-            #selectOption {
-              background-color: #2b2c37;
-              color: #fff;
-            }
-
-            .addNewSubtaskBtn,
-            .addNewColumnBtn {
-              background-color: #fff;
-              color: $base-color1;
-
-              &:hover {
-                background-color: #fff;
-              }
-            }
-          }
-
           .deleteModal .modalContent {
             background-color: #2b2c37;
 
@@ -69,6 +43,32 @@ header {
                   background-color: #fff;
                 }
               }
+            }
+          }
+        }
+
+        .modalBackdrop .modal {
+          background-color: #2b2c37;
+
+          h3,
+          label {
+            color: #fff;
+          }
+
+          input,
+          #description,
+          #selectOption {
+            background-color: #2b2c37;
+            color: #fff;
+          }
+
+          .addNewSubtaskBtn,
+          .addNewColumnBtn {
+            background-color: #fff;
+            color: $base-color1;
+
+            &:hover {
+              background-color: #fff;
             }
           }
         }
