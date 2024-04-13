@@ -9,13 +9,13 @@ import { DarkModeContext } from "../../context/DarkModeContext";
 import { HideSidebarContext } from "../../context/HideSidebarContext";
 
 function Sidebar() {
-  const { createBoards, boards, setBoards } = useContext(TaskContext);
+  const { createBoards, boards, setBoards, activeIndex, setActiveIndex } =
+    useContext(TaskContext);
   const { darkMode, toggleDarkMode } = useContext(DarkModeContext);
   const { isSidebarHidden, hideSidebar } = useContext(HideSidebarContext);
 
   const [modalVisible, setModalVisible] = useState(false);
   const [columnNames, setColumnNames] = useState(["Todo", "Doing"]);
-  const [activeIndex, setActiveIndex] = useState(0);
 
   const modalRef = useRef();
 

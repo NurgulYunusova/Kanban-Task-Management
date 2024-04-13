@@ -8,7 +8,7 @@ import { HideSidebarContext } from "../../context/HideSidebarContext";
 import showSidebar from "../../assets/images/show-sidebar.svg";
 
 function Content() {
-  const { boards, setBoards } = useContext(TaskContext);
+  const { boards, setBoards, setActiveIndex } = useContext(TaskContext);
   const { darkMode } = useContext(DarkModeContext);
   const { isSidebarHidden, hideSidebar } = useContext(HideSidebarContext);
 
@@ -143,6 +143,7 @@ function Content() {
     }));
 
     setBoards(updatedBoards);
+    setActiveIndex(0);
 
     closeDeleteModal();
     setTaskModalVisible(false);
@@ -320,12 +321,9 @@ function Content() {
                                 placeholder="e.g. Take coffee break"
                                 onChange={(e) => setTaskName(e.target.value)}
                                 value={taskName}
-                                required
-                              />{" "}
+                              />
                               <br />
-                              <label htmlFor="description">
-                                Description
-                              </label>{" "}
+                              <label htmlFor="description">Description</label>
                               <br />
                               <textarea
                                 name="description"
@@ -337,25 +335,26 @@ function Content() {
                               <label htmlFor="boardColumns">Subtasks</label>
                               {subtasks.map((subtask, index) => (
                                 <div key={index}>
-                                  <input
-                                    type="text"
-                                    name={`subtask-${index}`}
-                                    id={`subtask-${index}`}
-                                    value={subtask || ""}
-                                    onChange={(event) =>
-                                      handleInputChange(index, event)
-                                    }
-                                    required
-                                  />
-                                  <img
-                                    src={xmark}
-                                    alt="xmark"
-                                    onClick={() => {
-                                      const updatedSubtasks = [...subtasks];
-                                      updatedSubtasks.splice(index, 1);
-                                      setSubtasks(updatedSubtasks);
-                                    }}
-                                  />
+                                  <div className="input">
+                                    <input
+                                      type="text"
+                                      name={`subtask-${index}`}
+                                      id={`subtask-${index}`}
+                                      value={subtask || ""}
+                                      onChange={(event) =>
+                                        handleInputChange(index, event)
+                                      }
+                                    />
+                                    <img
+                                      src={xmark}
+                                      alt="xmark"
+                                      onClick={() => {
+                                        const updatedSubtasks = [...subtasks];
+                                        updatedSubtasks.splice(index, 1);
+                                        setSubtasks(updatedSubtasks);
+                                      }}
+                                    />
+                                  </div>
                                 </div>
                               ))}
                               <button
