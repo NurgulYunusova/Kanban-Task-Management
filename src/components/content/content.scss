@@ -552,6 +552,29 @@
               }
             }
           }
+
+          .changeStatus {
+            margin-top: 15px;
+
+            .changeStatusBtn {
+              width: 100%;
+              background-color: $base-color1;
+              border: transparent;
+              outline: none;
+              color: #fff;
+              font-family: $base-font;
+              font-weight: 700;
+              padding: 12px 18px;
+              border-radius: 24px;
+              cursor: pointer;
+              transition: all 0.2s ease-in-out;
+              font-size: 13px;
+
+              &:hover {
+                background-color: #8f8ce1;
+              }
+            }
+          }
         }
 
         &.editModal {

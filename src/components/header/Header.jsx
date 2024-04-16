@@ -7,10 +7,9 @@ import { TaskContext } from "../../context/TaskContext";
 import { DarkModeContext } from "../../context/DarkModeContext";
 
 function Header() {
-  const { boards, setBoards } = useContext(TaskContext);
+  const { boards, setBoards, activeIndex } = useContext(TaskContext);
   const { darkMode } = useContext(DarkModeContext);
 
-  const activeBoardIndex = boards.findIndex((b) => b.isActive);
   const board = boards?.find((board) => board.isActive == true);
   const columns = board?.columns;
 
@@ -79,7 +78,7 @@ function Header() {
     }
 
     const updatedBoards = [...boards];
-    const activeBoard = updatedBoards[activeBoardIndex];
+    const activeBoard = updatedBoards[activeIndex];
 
     activeBoard.name = boardName;
     activeBoard.columns = columns
@@ -89,7 +88,7 @@ function Header() {
         name: columnNames[index],
       }));
 
-    updatedBoards[activeBoardIndex] = activeBoard;
+    updatedBoards[activeIndex] = activeBoard;
 
     setBoards(updatedBoards);
 
@@ -106,7 +105,7 @@ function Header() {
     const updatedBoard = { ...board, columns: updatedColumns };
     const updatedBoards = [...boards];
 
-    updatedBoards[activeBoardIndex] = updatedBoard;
+    updatedBoards[activeIndex] = updatedBoard;
 
     setBoards(updatedBoards);
   };
@@ -138,26 +137,31 @@ function Header() {
       title: taskName,
       status: selectedStatus,
       subtasks: subtaskObjects,
+      description: description.length !== 0 ? description : "",
     };
 
-    const columnIndex = boards[activeBoardIndex].columns.findIndex(
+    let columnIndex = boards[activeIndex].columns.findIndex(
       (column) => column.name === selectedStatus
     );
 
-    if (columnIndex !== -1) {
-      boards[activeBoardIndex].columns[columnIndex].tasks.push(newTask);
-
-      setBoards([...boards]);
-
-      setTaskName("");
-      setDescription("");
-      setSubtasks(["", ""]);
-      setBoardName("");
-      setColumnNames([]);
+    if (columnIndex === -1) {
+      columnIndex = 0;
     }
 
+    boards[activeIndex].columns[columnIndex].tasks.push(newTask);
+
+    setBoards([...boards]);
+
+    setTaskName("");
+    setDescription("");
+    setSubtasks(["", ""]);
+    setBoardName("");
+    setColumnNames([]);
+    setSelectedStatus(boards[activeIndex].columns[0].name);
     setModalVisible(false);
   };
+
+  console.log(selectedStatus);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -314,7 +318,6 @@ function Header() {
                     <label htmlFor="status">Current Status</label> <br />
                     <select
                       id="selectOption"
-                      value={selectedStatus}
                       onChange={(e) => setSelectedStatus(e.target.value)}
                     >
                       {columns?.map((column, index) => (
@@ -323,7 +326,9 @@ function Header() {
                         </option>
                       ))}
                     </select>
-                    <button className="createTaskBtn">Create Task</button>
+                    <button className="createTaskBtn" type="submit">
+                      Create Task
+                    </button>
                   </form>
                 </div>
               </div>

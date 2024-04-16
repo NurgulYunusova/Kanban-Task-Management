@@ -183,32 +183,34 @@ function Content() {
     setModalVisible(false);
   };
 
+  const changeStatus = () => {
+    if (task && selectedStatus !== task.status) {
+      const updatedBoards = [...boards];
+      const columnIndex = columns.findIndex((col) => col.name === task.status);
+      const taskIndex = columns[columnIndex].tasks.findIndex(
+        (t) => t.title === task.title
+      );
+
+      if (taskIndex !== -1) {
+        const updatedTask = { ...task, status: selectedStatus };
+        columns[columnIndex].tasks.splice(taskIndex, 1);
+        const newColumnIndex = columns.findIndex(
+          (col) => col.name === selectedStatus
+        );
+        columns[newColumnIndex].tasks.push(updatedTask);
+        setBoards(updatedBoards);
+      }
+
+      setTaskModalVisible(false);
+    }
+  };
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
         setModalVisible(false);
         setTaskModalVisible(false);
         setIsEditOpen(false);
-
-        if (task && selectedStatus !== task.status) {
-          const updatedBoards = [...boards];
-          const columnIndex = columns.findIndex(
-            (col) => col.name === task.status
-          );
-          const taskIndex = columns[columnIndex].tasks.findIndex(
-            (t) => t.title === task.title
-          );
-
-          if (taskIndex !== -1) {
-            const updatedTask = { ...task, status: selectedStatus };
-            columns[columnIndex].tasks.splice(taskIndex, 1);
-            const newColumnIndex = columns.findIndex(
-              (col) => col.name === selectedStatus
-            );
-            columns[newColumnIndex].tasks.push(updatedTask);
-            setBoards(updatedBoards);
-          }
-        }
       }
     };
 
@@ -422,13 +424,13 @@ function Content() {
                     <p className="subtasksLength">
                       Subtasks (
                       {
-                        task.subtasks.filter((subtask) => subtask.isCompleted)
+                        task?.subtasks.filter((subtask) => subtask.isCompleted)
                           .length
                       }{" "}
                       of {task?.subtasks.length})
                     </p>
                     <ul className="subtasks">
-                      {task.subtasks.map((q, index) => (
+                      {task?.subtasks.map((q, index) => (
                         <li
                           className={
                             q.isCompleted ? "subtask completed" : "subtask"
@@ -460,6 +462,16 @@ function Content() {
                         </option>
                       ))}
                     </select>
+                  </div>
+
+                  <div className="changeStatus">
+                    <button
+                      className="changeStatusBtn"
+                      type="submit"
+                      onClick={changeStatus}
+                    >
+                      Change Status
+                    </button>
                   </div>
                 </div>
               </div>
