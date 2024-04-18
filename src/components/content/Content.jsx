@@ -202,8 +202,11 @@ function Content() {
       }
 
       setTaskModalVisible(false);
+      setSelectedStatus(null);
     }
   };
+
+  console.log(task);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -211,6 +214,7 @@ function Content() {
         setModalVisible(false);
         setTaskModalVisible(false);
         setIsEditOpen(false);
+        setTask(null);
       }
     };
 

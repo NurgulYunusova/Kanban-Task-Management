@@ -469,9 +469,9 @@ function Header() {
                   <div className="modalContent">
                     <h4>Delete this board?</h4>
                     <p>
-                      Are you sure you want to delete the "Platform Launch"
-                      board? This action will remove all columns and tasks and
-                      cannot be reversed.
+                      Are you sure you want to delete the "{board.name}" board?
+                      This action will remove all columns and tasks and cannot
+                      be reversed.
                     </p>
                     <div className="modalActions">
                       <button onClick={handleDelete} id="delete">
