@@ -96,6 +96,7 @@ function Content() {
 
   const openTaskModal = (data) => {
     setTaskModalVisible(true);
+    setSelectedStatus(data.status);
     setTask(data);
   };
 
@@ -197,16 +198,14 @@ function Content() {
         const newColumnIndex = columns.findIndex(
           (col) => col.name === selectedStatus
         );
-        columns[newColumnIndex].tasks.push(updatedTask);
+        columns[newColumnIndex]?.tasks?.push(updatedTask);
         setBoards(updatedBoards);
       }
 
       setTaskModalVisible(false);
-      setSelectedStatus(null);
+      setSelectedStatus("");
     }
   };
-
-  console.log(task);
 
   useEffect(() => {
     const handleClickOutside = (event) => {

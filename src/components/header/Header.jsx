@@ -161,8 +161,6 @@ function Header() {
     setModalVisible(false);
   };
 
-  console.log(selectedStatus);
-
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
