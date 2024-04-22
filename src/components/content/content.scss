@@ -291,6 +291,7 @@
               margin-top: 7px;
               margin-bottom: 7px;
               cursor: pointer;
+              resize: none;
             }
 
             #name {
@@ -325,6 +326,7 @@
               cursor: pointer;
               transition: all 0.2s ease-in-out;
               font-size: 13px;
+              text-align: center;
 
               &:hover {
                 background-color: #8f8ce1;

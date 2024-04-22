@@ -44,7 +44,7 @@ function Content() {
   useEffect(() => {
     setTaskName(task?.title);
     setDescription(task?.description);
-    setSubtasks(task?.subtasks.map((q) => q.title));
+    setSubtasks(task?.subtasks.map((q) => q));
   }, [task]);
 
   const handleNewColumn = () => {
@@ -101,20 +101,29 @@ function Content() {
   };
 
   const handleInputClick = (index) => {
-    const updatedSubtasks = [...task.subtasks];
+    const subtask = task.subtasks.find((subtask, i) => i === index);
 
-    updatedSubtasks[index].isCompleted = !updatedSubtasks[index].isCompleted;
-
-    setTask({ ...task, subtasks: updatedSubtasks });
+    subtask.isCompleted = !subtask.isCompleted;
   };
 
   const handleAddSubtask = () => {
-    setSubtasks([...subtasks, ""]);
+    setSubtasks([
+      ...subtasks,
+      {
+        title: "",
+        isCompleted: false,
+      },
+    ]);
   };
 
   const handleInputChange = (index, e) => {
     const updatedSubtasks = [...subtasks];
-    updatedSubtasks[index] = e.target.value;
+
+    updatedSubtasks[index] = {
+      ...updatedSubtasks[index],
+      title: e.target.value,
+    };
+
     setSubtasks(updatedSubtasks);
   };
 
@@ -153,35 +162,23 @@ function Content() {
   const handleTaskSubmit = (e) => {
     e.preventDefault();
 
-    const subtaskObjects = subtasks.map((subtask) => ({
-      title: subtask,
-      isCompleted: false,
-    }));
+    task.title = taskName;
+    task.description = description;
+    task.subtasks = subtasks;
 
-    const newTask = {
-      title: taskName,
-      status: selectedStatus,
-      subtasks: subtaskObjects,
-    };
-
-    const columnIndex = boards[activeBoardIndex].columns.findIndex(
-      (column) => column.name === selectedStatus
-    );
-
-    if (columnIndex !== -1) {
-      boards[activeBoardIndex].columns[columnIndex].tasks.push(newTask);
-
-      setBoards([...boards]);
-
-      setTaskName("");
-      setDescription("");
-      setSubtasks(["", ""]);
-      setBoardName("");
-      setColumnNames([]);
+    if (task.status !== selectedStatus) {
+      changeStatus();
+      task.status = selectedStatus;
     }
 
+    const updatedBoards = boards.map((board, index) => ({
+      ...board,
+      columns: index === activeBoardIndex ? columns : board.columns,
+    }));
+
+    setBoards(updatedBoards);
     setIsEditOpen(false);
-    setModalVisible(false);
+    setTaskModalVisible(false);
   };
 
   const changeStatus = () => {
@@ -209,7 +206,11 @@ function Content() {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (modalRef.current && !modalRef.current.contains(event.target)) {
+      if (
+        (modalVisible || taskModalVisible) &&
+        modalRef.current &&
+        !modalRef.current.contains(event.target)
+      ) {
         setModalVisible(false);
         setTaskModalVisible(false);
         setIsEditOpen(false);
@@ -345,7 +346,7 @@ function Content() {
                                       type="text"
                                       name={`subtask-${index}`}
                                       id={`subtask-${index}`}
-                                      value={subtask || ""}
+                                      value={subtask.title || ""}
                                       onChange={(event) =>
                                         handleInputChange(index, event)
                                       }
@@ -362,16 +363,13 @@ function Content() {
                                   </div>
                                 </div>
                               ))}
-                              <button
+                              <div
                                 className="addNewSubtaskBtn"
                                 onClick={handleAddSubtask}
                               >
                                 + Add New Subtask
-                              </button>{" "}
-                              <br />
-                              <label htmlFor="status">
-                                Current Status
-                              </label>{" "}
+                              </div>
+                              <label htmlFor="status">Current Status</label>{" "}
                               <br />
                               <select
                                 id="selectOption"
@@ -386,7 +384,7 @@ function Content() {
                                   </option>
                                 ))}
                               </select>
-                              <button className="createTaskBtn">
+                              <button className="createTaskBtn" type="submit">
                                 Create Task
                               </button>
                             </form>
