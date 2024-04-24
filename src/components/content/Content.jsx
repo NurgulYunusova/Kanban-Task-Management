@@ -8,18 +8,16 @@ import { HideSidebarContext } from "../../context/HideSidebarContext";
 import showSidebar from "../../assets/images/show-sidebar.svg";
 
 function Content() {
-  const { boards, setBoards, setActiveIndex } = useContext(TaskContext);
+  const { boards, setBoards, setActiveIndex, activeIndex } =
+    useContext(TaskContext);
   const { darkMode } = useContext(DarkModeContext);
   const { isSidebarHidden, hideSidebar } = useContext(HideSidebarContext);
 
-  const activeBoardIndex = boards.findIndex((b) => b.isActive);
   const board = boards?.find((board) => board.isActive == true);
-  const columns = board?.columns;
 
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState("");
   const [taskModalVisible, setTaskModalVisible] = useState(false);
-  const [columnNames, setColumnNames] = useState([]);
   const [task, setTask] = useState(null);
   const [boardName, setBoardName] = useState("");
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -28,17 +26,17 @@ function Content() {
   const [taskName, setTaskName] = useState("");
   const [description, setDescription] = useState("");
   const [subtasks, setSubtasks] = useState([]);
+  const [columns, setColumns] = useState([]);
 
   const modalRef = useRef();
 
   useEffect(() => {
     setBoardName(board?.name);
-    setSelectedStatus(columns[0]?.name);
-  }, [board, columns]);
+    setColumns(board?.columns);
+  }, [board]);
 
   useEffect(() => {
-    let newColumns = columns?.map((column) => column.name);
-    setColumnNames(newColumns);
+    setSelectedStatus(columns[0]?.name);
   }, [columns]);
 
   useEffect(() => {
@@ -52,45 +50,34 @@ function Content() {
   };
 
   const handleAddColumn = () => {
-    const newColumn = { name: "" };
-
-    const updatedColumns = [...columns, newColumn];
-
-    setColumnNames([...columnNames, ""]);
-
-    const updatedBoard = { ...board, columns: updatedColumns };
-    const updatedBoards = [...boards];
-
-    updatedBoards[activeBoardIndex] = updatedBoard;
-
-    setBoards(updatedBoards);
+    setColumns([
+      ...columns,
+      {
+        name: "",
+        tasks: [],
+      },
+    ]);
   };
+
+  console.log("columns", columns);
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     if (
       boardName.trim().length === 0 ||
-      columnNames.some((column) => column.trim().length === 0)
+      columns.some((column) => column.name.trim().length === 0)
     ) {
       return;
     }
 
     const updatedBoards = [...boards];
-    const activeBoard = updatedBoards[activeBoardIndex];
+    const activeBoard = updatedBoards[activeIndex];
 
     activeBoard.name = boardName;
-    activeBoard.columns = columns
-      .filter((column, index) => columnNames[index])
-      .map((column, index) => ({
-        ...column,
-        name: columnNames[index],
-      }));
-
-    updatedBoards[activeBoardIndex] = activeBoard;
+    activeBoard.columns = columns;
 
     setBoards(updatedBoards);
-
     setModalVisible(false);
   };
 
@@ -127,6 +114,17 @@ function Content() {
     setSubtasks(updatedSubtasks);
   };
 
+  const handleColumnInputChange = (index, e) => {
+    const updatedColumns = [...columns];
+
+    updatedColumns[index] = {
+      ...updatedColumns[index],
+      name: e.target.value,
+    };
+
+    setColumns(updatedColumns);
+  };
+
   const deleteButton = () => {
     setIsDeleteOpen(true);
     setMenuModalVisible(false);
@@ -149,7 +147,7 @@ function Content() {
 
     const updatedBoards = boards.map((board, index) => ({
       ...board,
-      columns: index === activeBoardIndex ? updatedColumns : board.columns,
+      columns: index === activeIndex ? updatedColumns : board.columns,
     }));
 
     setBoards(updatedBoards);
@@ -173,7 +171,7 @@ function Content() {
 
     const updatedBoards = boards.map((board, index) => ({
       ...board,
-      columns: index === activeBoardIndex ? columns : board.columns,
+      columns: index === activeIndex ? columns : board.columns,
     }));
 
     setBoards(updatedBoards);
@@ -215,6 +213,7 @@ function Content() {
         setTaskModalVisible(false);
         setIsEditOpen(false);
         setTask(null);
+        setColumns(board?.columns);
       }
     };
 
@@ -230,10 +229,11 @@ function Content() {
     taskModalVisible,
     selectedStatus,
     boards,
-    activeBoardIndex,
+    activeIndex,
     setBoards,
     task,
     columns,
+    board,
   ]);
 
   return (
@@ -252,7 +252,7 @@ function Content() {
         )}
         <div className="contentContainer">
           <div className="columns">
-            {columns?.map((column, index) => (
+            {board?.columns?.map((column, index) => (
               <div className="column" key={index}>
                 <h4 className="columnName">
                   {column?.name}({column.tasks?.length})
@@ -339,30 +339,31 @@ function Content() {
                                 value={description}
                               ></textarea>
                               <label htmlFor="boardColumns">Subtasks</label>
-                              {subtasks.map((subtask, index) => (
-                                <div key={index}>
-                                  <div className="input">
-                                    <input
-                                      type="text"
-                                      name={`subtask-${index}`}
-                                      id={`subtask-${index}`}
-                                      value={subtask.title || ""}
-                                      onChange={(event) =>
-                                        handleInputChange(index, event)
-                                      }
-                                    />
-                                    <img
-                                      src={xmark}
-                                      alt="xmark"
-                                      onClick={() => {
-                                        const updatedSubtasks = [...subtasks];
-                                        updatedSubtasks.splice(index, 1);
-                                        setSubtasks(updatedSubtasks);
-                                      }}
-                                    />
+                              {subtasks &&
+                                subtasks.map((subtask, index) => (
+                                  <div key={index}>
+                                    <div className="input">
+                                      <input
+                                        type="text"
+                                        name={`subtask-${index}`}
+                                        id={`subtask-${index}`}
+                                        value={subtask.title || ""}
+                                        onChange={(event) =>
+                                          handleInputChange(index, event)
+                                        }
+                                      />
+                                      <img
+                                        src={xmark}
+                                        alt="xmark"
+                                        onClick={() => {
+                                          const updatedSubtasks = [...subtasks];
+                                          updatedSubtasks.splice(index, 1);
+                                          setSubtasks(updatedSubtasks);
+                                        }}
+                                      />
+                                    </div>
                                   </div>
-                                </div>
-                              ))}
+                                ))}
                               <div
                                 className="addNewSubtaskBtn"
                                 onClick={handleAddSubtask}
@@ -517,66 +518,61 @@ function Content() {
                       ""
                     )}
                     <label htmlFor="boardColumns">Board Columns</label>
-                    {columnNames.map((columnName, index) => (
-                      <div key={index}>
-                        <div className="input">
-                          <input
-                            type="text"
-                            name={`column-${index}`}
-                            id={`column-${index}`}
-                            value={columnName}
-                            onChange={(e) => {
-                              const updatedColumns = [...columnNames];
-                              updatedColumns[index] = e.target.value;
-                              setColumnNames(updatedColumns);
-                            }}
-                          />
-                          {
-                            <img
-                              src={xmark}
-                              alt="xmark"
-                              onClick={() => {
-                                const updatedColumns = [...columnNames];
-                                updatedColumns.splice(index, 1);
-                                setColumnNames(updatedColumns);
+                    {columns &&
+                      columns.map((column, index) => (
+                        <div key={index}>
+                          <div className="input">
+                            <input
+                              type="text"
+                              name={`column-${index}`}
+                              id={`column-${index}`}
+                              value={column.name || ""}
+                              onChange={(event) => {
+                                handleColumnInputChange(index, event);
                               }}
                             />
-                          }
-                        </div>
-                        {columnName.trim().length == 0 ? (
-                          <div
-                            style={{
-                              height: "10px",
-                              marginTop: "-3px",
-                            }}
-                          >
-                            <p
+                            {
+                              <img
+                                src={xmark}
+                                alt="xmark"
+                                onClick={() => {
+                                  const updatedColumns = [...columns];
+                                  updatedColumns.splice(index, 1);
+                                  setColumns(updatedColumns);
+                                }}
+                              />
+                            }
+                          </div>
+                          {column.name.trim().length == 0 ? (
+                            <div
                               style={{
-                                color: "red",
-                                fontSize: "10px",
-                                marginTop: "0",
+                                height: "10px",
+                                marginTop: "-3px",
                               }}
                             >
-                              Can't be empty
-                            </p>
-                          </div>
-                        ) : (
-                          <div
-                            style={{
-                              height: "10px",
-                              marginTop: "-3px",
-                            }}
-                          ></div>
-                        )}
-                      </div>
-                    ))}
-                    <button
-                      className="addNewColumnBtn"
-                      onClick={handleAddColumn}
-                    >
+                              <p
+                                style={{
+                                  color: "red",
+                                  fontSize: "10px",
+                                  marginTop: "0",
+                                }}
+                              >
+                                Can't be empty
+                              </p>
+                            </div>
+                          ) : (
+                            <div
+                              style={{
+                                height: "10px",
+                                marginTop: "-3px",
+                              }}
+                            ></div>
+                          )}
+                        </div>
+                      ))}
+                    <div className="addNewColumnBtn" onClick={handleAddColumn}>
                       + Add New Column
-                    </button>{" "}
-                    <br />
+                    </div>
                     <button className="saveChangesBtn" type="submit">
                       Save Changes
                     </button>
