@@ -11,11 +11,10 @@ function Header() {
   const { darkMode } = useContext(DarkModeContext);
 
   const board = boards?.find((board) => board.isActive == true);
-  const columns = board?.columns;
 
+  const [columns, setColumns] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
-  const [columnNames, setColumnNames] = useState([]);
   const [selectedStatus, setSelectedStatus] = useState(columns[0]?.name);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
@@ -28,17 +27,24 @@ function Header() {
 
   useEffect(() => {
     setBoardName(board?.name);
+    setColumns(board?.columns);
   }, [board]);
-
-  useEffect(() => {
-    let newColumns = columns?.map((column) => column.name);
-    setColumnNames(newColumns);
-  }, [columns]);
 
   const handleInputChange = (index, e) => {
     const updatedSubtasks = [...subtasks];
     updatedSubtasks[index] = e.target.value;
     setSubtasks(updatedSubtasks);
+  };
+
+  const handleColumnInputChange = (index, e) => {
+    const updatedColumns = [...columns];
+
+    updatedColumns[index] = {
+      ...updatedColumns[index],
+      name: e.target.value,
+    };
+
+    setColumns(updatedColumns);
   };
 
   const closeDeleteModal = () => {
@@ -72,7 +78,7 @@ function Header() {
 
     if (
       boardName.trim().length === 0 ||
-      columnNames.some((column) => column.trim().length === 0)
+      columns.some((column) => column.name.trim().length === 0)
     ) {
       return;
     }
@@ -81,33 +87,20 @@ function Header() {
     const activeBoard = updatedBoards[activeIndex];
 
     activeBoard.name = boardName;
-    activeBoard.columns = columns
-      .filter((column, index) => columnNames[index])
-      .map((column, index) => ({
-        ...column,
-        name: columnNames[index],
-      }));
-
-    updatedBoards[activeIndex] = activeBoard;
+    activeBoard.columns = columns;
 
     setBoards(updatedBoards);
-
     setEditModalVisible(false);
   };
 
   const handleAddColumn = () => {
-    const newColumn = { name: "" };
-
-    const updatedColumns = [...columns, newColumn];
-
-    setColumnNames([...columnNames, ""]);
-
-    const updatedBoard = { ...board, columns: updatedColumns };
-    const updatedBoards = [...boards];
-
-    updatedBoards[activeIndex] = updatedBoard;
-
-    setBoards(updatedBoards);
+    setColumns([
+      ...columns,
+      {
+        name: "",
+        tasks: [],
+      },
+    ]);
   };
 
   const handleAddNewTask = () => {
@@ -156,7 +149,6 @@ function Header() {
     setDescription("");
     setSubtasks(["", ""]);
     setBoardName("");
-    setColumnNames([]);
     setSelectedStatus(boards[activeIndex].columns[0].name);
     setModalVisible(false);
   };
@@ -170,7 +162,7 @@ function Header() {
         setDescription("");
         setSubtasks(["", ""]);
         setBoardName(board?.name || "");
-        setColumnNames(columns?.map((column) => column.name || []));
+        setColumns(board?.columns);
       }
     };
 
@@ -394,66 +386,64 @@ function Header() {
                         ""
                       )}
                       <label htmlFor="boardColumns">Board Columns</label>
-                      {columnNames.map((columnName, index) => (
-                        <div key={index}>
-                          <div className="input">
-                            <input
-                              type="text"
-                              name={`column-${index}`}
-                              id={`column-${index}`}
-                              value={columnName}
-                              onChange={(e) => {
-                                const updatedColumns = [...columnNames];
-                                updatedColumns[index] = e.target.value;
-                                setColumnNames(updatedColumns);
-                              }}
-                            />
-                            {
-                              <img
-                                src={xmark}
-                                alt="xmark"
-                                onClick={() => {
-                                  const updatedColumns = [...columnNames];
-                                  updatedColumns.splice(index, 1);
-                                  setColumnNames(updatedColumns);
+                      {columns &&
+                        columns.map((column, index) => (
+                          <div key={index}>
+                            <div className="input">
+                              <input
+                                type="text"
+                                name={`column-${index}`}
+                                id={`column-${index}`}
+                                value={column.name}
+                                onChange={(event) => {
+                                  handleColumnInputChange(index, event);
                                 }}
                               />
-                            }
-                          </div>
-                          {columnName.trim().length == 0 ? (
-                            <div
-                              style={{
-                                height: "10px",
-                                marginTop: "-3px",
-                              }}
-                            >
-                              <p
+                              {
+                                <img
+                                  src={xmark}
+                                  alt="xmark"
+                                  onClick={() => {
+                                    const updatedColumns = [...columns];
+                                    updatedColumns.splice(index, 1);
+                                    setColumns(updatedColumns);
+                                  }}
+                                />
+                              }
+                            </div>
+                            {column.name.trim().length == 0 ? (
+                              <div
                                 style={{
-                                  color: "red",
-                                  fontSize: "10px",
-                                  marginTop: "0",
+                                  height: "10px",
+                                  marginTop: "-3px",
                                 }}
                               >
-                                Can't be empty
-                              </p>
-                            </div>
-                          ) : (
-                            <div
-                              style={{
-                                height: "10px",
-                                marginTop: "-3px",
-                              }}
-                            ></div>
-                          )}
-                        </div>
-                      ))}
-                      <button
+                                <p
+                                  style={{
+                                    color: "red",
+                                    fontSize: "10px",
+                                    marginTop: "0",
+                                  }}
+                                >
+                                  Can't be empty
+                                </p>
+                              </div>
+                            ) : (
+                              <div
+                                style={{
+                                  height: "10px",
+                                  marginTop: "-3px",
+                                }}
+                              ></div>
+                            )}
+                          </div>
+                        ))}
+                      <div
                         className="addNewColumnBtn"
                         onClick={handleAddColumn}
                       >
                         + Add New Column
-                      </button>{" "}
-                      <br />
+                      </div>
                       <button className="saveChangesBtn" type="submit">
                         Save Changes
                       </button>
