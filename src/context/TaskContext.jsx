@@ -13,7 +13,7 @@ export const TaskProvider = ({ children }) => {
   }, [boards]);
 
   const createBoards = (newBoard) => {
-    boards.push(newBoard);
+    setBoards([...boards, newBoard]);
   };
 
   return (

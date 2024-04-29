@@ -59,8 +59,6 @@ function Content() {
     ]);
   };
 
-  console.log("columns", columns);
-
   const handleSubmit = (e) => {
     e.preventDefault();
 
