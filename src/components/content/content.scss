@@ -584,5 +584,170 @@
         }
       }
     }
+
+    .noColumnsMessage {
+      @include center();
+      flex-direction: column;
+      height: calc(100vh - 85px);
+
+      h2 {
+        color: #828fa3;
+        margin-bottom: 25px;
+        text-align: center;
+        font-size: 19px;
+        font-family: $base-font;
+      }
+
+      .addNewColumnBtn {
+        background-color: $base-color1;
+        border: transparent;
+        outline: none;
+        color: #fff;
+        font-family: $base-font;
+        font-weight: 700;
+        padding: 15px 18px;
+        border-radius: 24px;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+        font-size: 15px;
+        text-align: center;
+
+        &:hover {
+          background-color: #8f8ce1;
+        }
+      }
+    }
+
+    .modalBackdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 99;
+      font-family: $base-font;
+
+      .modal {
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 8px;
+        width: 480px;
+        max-height: 90%;
+        overflow-y: scroll;
+
+        .editHeading {
+          font-size: 19px;
+          margin-bottom: 24px;
+        }
+
+        form {
+          width: 100%;
+
+          label {
+            font-size: 12px;
+            color: $base-color2;
+            font-weight: 700;
+          }
+
+          input,
+          #selectOption {
+            border: 1px solid rgba(130, 143, 163, 0.25);
+            font-size: 13px;
+            padding: 8px 16px;
+            height: 40px;
+            border-radius: 4px;
+            width: 100%;
+            outline: none;
+            font-family: $base-font;
+            font-weight: 500;
+            margin-top: 7px;
+            margin-bottom: 7px;
+            cursor: pointer;
+
+            &::placeholder {
+              font-size: 13px;
+              font-weight: 500;
+              font-family: $base-font;
+              color: #949aa248;
+            }
+          }
+
+          #selectOption {
+            -webkit-appearance: none;
+            appearance: none;
+            background-image: url("https://kanban-task-management-app.netlify.app/static/media/icon-chevron-down.77595c15c9072ba0ef8a.svg");
+            background-position: right 16px top 50%;
+            background-repeat: no-repeat;
+            margin-bottom: 25px;
+          }
+
+          #description {
+            border: 1px solid rgba(130, 143, 163, 0.25);
+            font-size: 13px;
+            padding: 8px 16px;
+            border-radius: 4px;
+            width: 100%;
+            outline: none;
+            font-family: $base-font;
+            font-weight: 500;
+            margin-top: 7px;
+            margin-bottom: 7px;
+            cursor: pointer;
+            resize: none;
+          }
+
+          #name {
+            margin-bottom: 15px;
+          }
+
+          .input {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+
+            img {
+              width: 15px;
+              height: 15px;
+              cursor: pointer;
+            }
+          }
+
+          .addNewSubtaskBtn,
+          .createTaskBtn,
+          .addNewColumnBtn,
+          .saveChangesBtn {
+            width: 100%;
+            background-color: $base-color1;
+            border: transparent;
+            outline: none;
+            color: #fff;
+            font-family: $base-font;
+            font-weight: 700;
+            padding: 12px 18px;
+            border-radius: 24px;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            font-size: 13px;
+            text-align: center;
+
+            &:hover {
+              background-color: #8f8ce1;
+            }
+          }
+
+          .addNewSubtaskBtn {
+            margin: 15px 0 25px;
+          }
+
+          .addNewColumnBtn {
+            margin: 10px 0 25px;
+          }
+        }
+      }
+    }
   }
 }
