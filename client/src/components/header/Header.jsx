@@ -249,55 +249,56 @@ function Header() {
                       value={description}
                     ></textarea>
                     <label htmlFor="boardColumns">Subtasks</label>
-                    {subtasks.map((subtask, index) => (
-                      <div key={index}>
-                        <div className="input">
-                          <input
-                            type="text"
-                            name={`subtask-${index}`}
-                            id={`subtask-${index}`}
-                            value={subtask || ""}
-                            onChange={(event) =>
-                              handleInputChange(index, event)
-                            }
-                          />
-                          <img
-                            src={xmark}
-                            alt="xmark"
-                            onClick={() => {
-                              const updatedSubtasks = [...subtasks];
-                              updatedSubtasks.splice(index, 1);
-                              setSubtasks(updatedSubtasks);
-                            }}
-                          />
-                        </div>
-                        {subtask.trim().length == 0 ? (
-                          <div
-                            style={{
-                              height: "10px",
-                              marginTop: "-3px",
-                            }}
-                          >
-                            <p
+                    {subtasks &&
+                      subtasks.map((subtask, index) => (
+                        <div key={index}>
+                          <div className="input">
+                            <input
+                              type="text"
+                              name={`subtask-${index}`}
+                              id={`subtask-${index}`}
+                              value={subtask || ""}
+                              onChange={(event) =>
+                                handleInputChange(index, event)
+                              }
+                            />
+                            <img
+                              src={xmark}
+                              alt="xmark"
+                              onClick={() => {
+                                const updatedSubtasks = [...subtasks];
+                                updatedSubtasks.splice(index, 1);
+                                setSubtasks(updatedSubtasks);
+                              }}
+                            />
+                          </div>
+                          {subtask.trim().length == 0 ? (
+                            <div
                               style={{
-                                color: "red",
-                                fontSize: "10px",
-                                marginTop: "0",
+                                height: "10px",
+                                marginTop: "-3px",
                               }}
                             >
-                              Can't be empty
-                            </p>
-                          </div>
-                        ) : (
-                          <div
-                            style={{
-                              height: "10px",
-                              marginTop: "-3px",
-                            }}
-                          ></div>
-                        )}
-                      </div>
-                    ))}
+                              <p
+                                style={{
+                                  color: "red",
+                                  fontSize: "10px",
+                                  marginTop: "0",
+                                }}
+                              >
+                                Can't be empty
+                              </p>
+                            </div>
+                          ) : (
+                            <div
+                              style={{
+                                height: "10px",
+                                marginTop: "-3px",
+                              }}
+                            ></div>
+                          )}
+                        </div>
+                      ))}
                     <button
                       className="addNewSubtaskBtn"
                       onClick={handleAddSubtask}

@@ -158,6 +158,13 @@ function Content() {
   const handleTaskSubmit = (e) => {
     e.preventDefault();
 
+    if (
+      taskName.trim().length === 0 ||
+      subtasks.some((subtask) => subtask.title.trim().length === 0)
+    ) {
+      return;
+    }
+
     task.title = taskName;
     task.description = description;
     task.subtasks = subtasks;
@@ -440,7 +447,26 @@ function Content() {
                                   onChange={(e) => setTaskName(e.target.value)}
                                   value={taskName}
                                 />
-                                <br />
+                                {taskName.length === 0 ? (
+                                  <div
+                                    style={{
+                                      height: "10px",
+                                      marginTop: "-10px",
+                                    }}
+                                  >
+                                    <p
+                                      style={{
+                                        color: "red",
+                                        fontSize: "10px",
+                                        marginTop: "0px",
+                                      }}
+                                    >
+                                      Can't be empty
+                                    </p>
+                                  </div>
+                                ) : (
+                                  ""
+                                )}
                                 <label htmlFor="description">Description</label>
                                 <br />
                                 <textarea
@@ -478,6 +504,31 @@ function Content() {
                                           }}
                                         />
                                       </div>
+                                      {subtask.title.trim().length == 0 ? (
+                                        <div
+                                          style={{
+                                            height: "10px",
+                                            marginTop: "-3px",
+                                          }}
+                                        >
+                                          <p
+                                            style={{
+                                              color: "red",
+                                              fontSize: "10px",
+                                              marginTop: "0",
+                                            }}
+                                          >
+                                            Can't be empty
+                                          </p>
+                                        </div>
+                                      ) : (
+                                        <div
+                                          style={{
+                                            height: "10px",
+                                            marginTop: "-3px",
+                                          }}
+                                        ></div>
+                                      )}
                                     </div>
                                   ))}
                                 <div
