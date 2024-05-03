@@ -20,19 +20,6 @@ const protect = async (req, res, next) => {
   }
 };
 
-// User must be an admin
-const admin = async (req, res, next) => {
-  const user = await User.findById(req.userId);
-
-  if (user && user.isAdmin == true) {
-    next();
-  } else {
-    res.status(401);
-    throw new Error("Not authorized as an admin");
-  }
-};
-
 module.exports = {
   protect,
-  admin,
 };

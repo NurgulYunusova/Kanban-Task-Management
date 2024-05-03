@@ -1,10 +1,6 @@
 const { default: mongoose } = require("mongoose");
 const bcrypt = require("bcryptjs");
 
-function baseUrl(v) {
-  return process.env.VERCEL_URL + v;
-}
-
 const userSchema = new mongoose.Schema(
   {
     name: {

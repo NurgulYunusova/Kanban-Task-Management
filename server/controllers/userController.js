@@ -66,200 +66,150 @@ const userController = {
       }
     });
   },
-  loginUser: async (req, res) => {
-    const { email, password } = req.body;
+  // loginUser: async (req, res) => {
+  //   const { email, password } = req.body;
 
-    const user = await User.findOne({ email: email });
+  //   const user = await User.findOne({ email: email });
 
-    if (user) {
-      if (!user.isActive && (await user.matchPassword(password))) {
-        const confirmCode = Math.floor(Math.random() * 10000);
-        const codeExpire = moment().add(89, "seconds");
+  //   if (user) {
+  //     if (!user.isActive && (await user.matchPassword(password))) {
+  //       const confirmCode = Math.floor(Math.random() * 10000);
+  //       const codeExpire = moment().add(89, "seconds");
 
-        user.confirmCode = confirmCode;
-        user.codeExpire = codeExpire;
+  //       user.confirmCode = confirmCode;
+  //       user.codeExpire = codeExpire;
 
-        user.save();
+  //       user.save();
 
-        sendConfirmEmail(email, confirmCode);
-        res.status(203).json({
-          message:
-            "Login is successful. Please check your email for verification code.",
-        });
-      } else if (await user.matchPassword(password)) {
-        const token = generateToken(res, user._id);
-        res.json(token);
-      } else {
-        res.status(401).json({
-          message: "Invalid email or password",
-        });
-      }
-    } else {
-      res.status(404).json({
-        message: "User not found",
-      });
-    }
-  },
-  getUserProfile: async (req, res) => {
-    const userId = req?.userId;
+  //       sendConfirmEmail(email, confirmCode);
+  //       res.status(203).json({
+  //         message:
+  //           "Login is successful. Please check your email for verification code.",
+  //       });
+  //     } else if (await user.matchPassword(password)) {
+  //       const token = generateToken(res, user._id);
+  //       res.json(token);
+  //     } else {
+  //       res.status(401).json({
+  //         message: "Invalid email or password",
+  //       });
+  //     }
+  //   } else {
+  //     res.status(404).json({
+  //       message: "User not found",
+  //     });
+  //   }
+  // },
+  // getUserProfile: async (req, res) => {
+  //   const userId = req?.userId;
 
-    try {
-      const user = await User.findById(userId).select("-password  ");
+  //   try {
+  //     const user = await User.findById(userId).select("-password  ");
 
-      if (!user) {
-        res.status(404).json({ message: "User not found" });
-      }
+  //     if (!user) {
+  //       res.status(404).json({ message: "User not found" });
+  //     }
 
-      res.json(user);
-    } catch {
-      res.status(500).json({ message: "Server error" });
-    }
-  },
-  updateUserProfile: async (req, res) => {
-    let file = req.files?.photo;
-    const userId = req.params.id;
+  //     res.json(user);
+  //   } catch {
+  //     res.status(500).json({ message: "Server error" });
+  //   }
+  // },
+  // updateUserProfile: async (req, res) => {
+  //   let file = req.files?.photo;
+  //   const userId = req.params.id;
 
-    const user = await User.findById(userId);
+  //   const user = await User.findById(userId);
 
-    if (user) {
-      const uploadFile = () => {
-        return new Promise((resolve, reject) => {
-          if (!file) {
-            resolve(null);
-            return;
-          }
+  //   if (user) {
+  //     const uploadFile = () => {
+  //       return new Promise((resolve, reject) => {
+  //         if (!file) {
+  //           resolve(null);
+  //           return;
+  //         }
 
-          const path = "userProfileImages/" + file.name;
+  //         const path = "userProfileImages/" + file.name;
 
-          file.mv(path, function (err) {
-            if (err) {
-              reject(err);
-            } else {
-              resolve(path);
-            }
-          });
-        });
-      };
+  //         file.mv(path, function (err) {
+  //           if (err) {
+  //             reject(err);
+  //           } else {
+  //             resolve(path);
+  //           }
+  //         });
+  //       });
+  //     };
 
-      const imagePath = await uploadFile();
+  //     const imagePath = await uploadFile();
 
-      user.name = req.body.name || user.name;
-      user.email = req.body.email || user.email;
+  //     user.name = req.body.name || user.name;
+  //     user.email = req.body.email || user.email;
 
-      if (imagePath) {
-        user.profileImage = imagePath;
-      }
+  //     if (imagePath) {
+  //       user.profileImage = imagePath;
+  //     }
 
-      if (req.body.password) {
-        user.password = req.body.password;
-      }
+  //     if (req.body.password) {
+  //       user.password = req.body.password;
+  //     }
 
-      const updatedUser = await user.save();
+  //     const updatedUser = await user.save();
 
-      res.json({
-        _id: updatedUser._id,
-        name: updatedUser.name,
-        email: updatedUser.email,
-        isAdmin: updatedUser.isAdmin,
-      });
-    } else {
-      res.status(404);
-      throw new Error("User not found");
-    }
-  },
-  forgotPassword: async (req, res) => {
-    const email = req.body.email;
-    try {
-      const user = await User.findOne({ email });
+  //     res.json({
+  //       _id: updatedUser._id,
+  //       name: updatedUser.name,
+  //       email: updatedUser.email,
+  //       isAdmin: updatedUser.isAdmin,
+  //     });
+  //   } else {
+  //     res.status(404);
+  //     throw new Error("User not found");
+  //   }
+  // },
+  // forgotPassword: async (req, res) => {
+  //   const email = req.body.email;
+  //   try {
+  //     const user = await User.findOne({ email });
 
-      if (!user) {
-        return res.status(404).json("User not found");
-      }
+  //     if (!user) {
+  //       return res.status(404).json("User not found");
+  //     }
 
-      transporter.sendMail({
-        from: "c8657545@gmail.com",
-        to: email,
-        subject: "Reset Password Link",
-        html: `<p>If you want to change your password, click here <a href="http://localhost:5173/changePassword?userId=${user._id}">change your password</a></p>`,
-      });
+  //     transporter.sendMail({
+  //       from: "c8657545@gmail.com",
+  //       to: email,
+  //       subject: "Reset Password Link",
+  //       html: `<p>If you want to change your password, click here <a href="http://localhost:5173/changePassword?userId=${user._id}">change your password</a></p>`,
+  //     });
 
-      return res
-        .status(200)
-        .json(
-          "Email sent successfully. To change your password check the email"
-        );
-    } catch (error) {
-      console.log(error);
-    }
-  },
-  changePassword: async (req, res) => {
-    const { userId, password } = req.body;
+  //     return res
+  //       .status(200)
+  //       .json(
+  //         "Email sent successfully. To change your password check the email"
+  //       );
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // },
+  // changePassword: async (req, res) => {
+  //   const { userId, password } = req.body;
 
-    try {
-      const user = await User.findById(userId);
+  //   try {
+  //     const user = await User.findById(userId);
 
-      if (!user) {
-        res.status(404).json("User not found");
-      }
+  //     if (!user) {
+  //       res.status(404).json("User not found");
+  //     }
 
-      user.password = password;
+  //     user.password = password;
 
-      await user.save();
-      res.status(200).json("Password changed successfully");
-    } catch (error) {
-      console.log(error);
-    }
-  },
-  // Admin
-  getUsers: async (req, res) => {
-    try {
-      const users = await User.find();
-      res.status(200).json(users);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch users", error });
-    }
-  },
-  deleteUser: async (req, res) => {
-    const user = await User.findById(req.params.id);
-
-    if (user) {
-      if (user.isAdmin) {
-        res.status(400);
-        throw new Error("You can'not delete admin user");
-      }
-      await User.deleteOne({ _id: user._id });
-      res.json({ message: "User removed" });
-    } else {
-      res.status(404);
-      throw new Error("User not found");
-    }
-  },
-  getUserById: async (req, res) => {
-    const user = await User.findById(req.params.id).select("-password");
-
-    if (user) {
-      res.json(user);
-    } else {
-      res.status(404);
-      throw new Error("User not found");
-    }
-  },
-  updateUser: async (req, res) => {
-    const user = await User.findById(req.params.id);
-
-    if (user) {
-      user.isAdmin = Boolean(req.body.isAdmin);
-
-      await user.save();
-
-      res.json({
-        message: "User updated",
-      });
-    } else {
-      res.status(404);
-      throw new Error("User not found");
-    }
-  },
+  //     await user.save();
+  //     res.status(200).json("Password changed successfully");
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // },
 };
 
 const transporter = nodemailer.createTransport({
