@@ -66,55 +66,55 @@ const userController = {
       }
     });
   },
-  // loginUser: async (req, res) => {
-  //   const { email, password } = req.body;
+  loginUser: async (req, res) => {
+    const { email, password } = req.body;
 
-  //   const user = await User.findOne({ email: email });
+    const user = await User.findOne({ email: email });
 
-  //   if (user) {
-  //     if (!user.isActive && (await user.matchPassword(password))) {
-  //       const confirmCode = Math.floor(Math.random() * 10000);
-  //       const codeExpire = moment().add(89, "seconds");
+    if (user) {
+      if (!user.isActive && (await user.matchPassword(password))) {
+        const confirmCode = Math.floor(Math.random() * 10000);
+        const codeExpire = moment().add(89, "seconds");
 
-  //       user.confirmCode = confirmCode;
-  //       user.codeExpire = codeExpire;
+        user.confirmCode = confirmCode;
+        user.codeExpire = codeExpire;
 
-  //       user.save();
+        user.save();
 
-  //       sendConfirmEmail(email, confirmCode);
-  //       res.status(203).json({
-  //         message:
-  //           "Login is successful. Please check your email for verification code.",
-  //       });
-  //     } else if (await user.matchPassword(password)) {
-  //       const token = generateToken(res, user._id);
-  //       res.json(token);
-  //     } else {
-  //       res.status(401).json({
-  //         message: "Invalid email or password",
-  //       });
-  //     }
-  //   } else {
-  //     res.status(404).json({
-  //       message: "User not found",
-  //     });
-  //   }
-  // },
-  // getUserProfile: async (req, res) => {
-  //   const userId = req?.userId;
+        sendConfirmEmail(email, confirmCode);
+        res.status(203).json({
+          message:
+            "Login is successful. Please check your email for verification code.",
+        });
+      } else if (await user.matchPassword(password)) {
+        const token = generateToken(res, user._id);
+        res.json(token);
+      } else {
+        res.status(401).json({
+          message: "Invalid email or password",
+        });
+      }
+    } else {
+      res.status(404).json({
+        message: "User not found",
+      });
+    }
+  },
+  getUserProfile: async (req, res) => {
+    const userId = req?.userId;
 
-  //   try {
-  //     const user = await User.findById(userId).select("-password  ");
+    try {
+      const user = await User.findById(userId).select("-password  ");
 
-  //     if (!user) {
-  //       res.status(404).json({ message: "User not found" });
-  //     }
+      if (!user) {
+        res.status(404).json({ message: "User not found" });
+      }
 
-  //     res.json(user);
-  //   } catch {
-  //     res.status(500).json({ message: "Server error" });
-  //   }
-  // },
+      res.json(user);
+    } catch {
+      res.status(500).json({ message: "Server error" });
+    }
+  },
   // updateUserProfile: async (req, res) => {
   //   let file = req.files?.photo;
   //   const userId = req.params.id;

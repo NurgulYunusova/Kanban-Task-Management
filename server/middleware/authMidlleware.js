@@ -16,7 +16,7 @@ const protect = async (req, res, next) => {
       next();
     });
   } catch (error) {
-    throw new Error("saddas");
+    throw new Error("");
   }
 };
 
