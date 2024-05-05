@@ -3,3 +3,24 @@
   align-items: $align-items;
   justify-content: $justify-content;
 }
+
+@mixin button() {
+  padding: 8px 25px;
+  font-family: $base-font;
+  color: #2e2c65;
+  border: 2px solid #2e2c65;
+  font-weight: 500;
+  background-color: transparent;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+
+  @include buttonHoverEffect;
+}
+
+@mixin buttonHoverEffect() {
+  &:hover {
+    background-color: #2e2c65;
+    color: #b9a4c6;
+  }
+}

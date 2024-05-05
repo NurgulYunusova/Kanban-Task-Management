@@ -1,0 +1,132 @@
+@import "../../../assets/sass/variables.scss";
+@import "../../../assets/sass/mixins.scss";
+
+.login {
+  width: 100%;
+  height: 100vh;
+  background-color: #b9a4c6;
+
+  &Container {
+    width: 80%;
+    height: 100vh;
+    margin: 0 auto 100px;
+    @include center($justify-content: space-around);
+
+    .image {
+      img {
+        width: 450px;
+        height: auto;
+      }
+    }
+
+    .form {
+      width: 40%;
+      font-family: $base-font;
+      color: #2e2c65;
+
+      h3 {
+        font-size: 32px;
+        text-align: center;
+      }
+
+      .information {
+        font-size: 14px;
+        margin: 35px 0 25px;
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+
+        input {
+          padding: 16px 22px;
+          font-size: 14px;
+          outline: none;
+          background: transparent;
+          border: 1px solid #1c1a3c;
+
+          &::placeholder {
+            font-size: 14px;
+            font-family: $base-font;
+            font-weight: 500;
+            color: #2e2c656f;
+          }
+        }
+
+        a {
+          margin-top: 25px;
+          font-size: 13px;
+          font-weight: 500;
+          color: #2e2c65;
+          text-align: right;
+          cursor: pointer;
+          text-decoration: underline;
+        }
+
+        button {
+          max-width: max-content;
+          margin: 20px auto;
+          @include button();
+        }
+      }
+
+      .forgotPasswordLink {
+        font-size: 13px;
+        text-align: center;
+        color: #2e2c65;
+        font-weight: 400;
+
+        a {
+          text-decoration: underline;
+          cursor: pointer;
+        }
+      }
+
+      .registerLink {
+        margin-top: 10px;
+        font-size: 13px;
+        text-align: center;
+        color: #2e2c65;
+        font-weight: 400;
+
+        a {
+          color: #2e2c65;
+          font-weight: 700;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}
+
+// @media screen and (min-width: 320px) and (max-width: 767px) {
+//   .login {
+//     &Container {
+//       width: 85%;
+//       margin: 0 auto;
+
+//       .image {
+//         display: none;
+//       }
+
+//       .form {
+//         width: 80%;
+//       }
+//     }
+//   }
+// }
+
+// @media screen and (min-width: 767px) and (max-width: 991px) {
+//   .login {
+//     &Container {
+//       width: 85%;
+//       margin: 0 auto;
+
+//       .image {
+//         img {
+//           width: 370px;
+//         }
+//       }
+//     }
+//   }
+// }

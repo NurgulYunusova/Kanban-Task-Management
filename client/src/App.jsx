@@ -1,27 +1,33 @@
-import Header from "./components/header/Header";
-import Sidebar from "./components/sidebar/Sidebar";
-import Content from "./components/content/Content";
-import EmptyBoard from "./components/emptyBoard/EmptyBoard";
 import "./index.css";
-import { TaskContext } from "./context/TaskContext";
 import { useContext } from "react";
+import { UserContext } from "./context/UserContext";
+import { Route, Routes } from "react-router-dom";
+import { routes } from "./routes/Routes";
+import UserRoute from "./routes/UserRoute";
+import HomePage from "./pages/Home/HomePage";
 
 function App() {
-  const { boards } = useContext(TaskContext);
+  const { isLoggedIn } = useContext(UserContext);
 
   return (
     <>
-      {boards.length !== 0 ? (
-        <>
-          <Header />
-          <div className="bottom">
-            <Sidebar />
-            <Content />
-          </div>
-        </>
-      ) : (
-        <EmptyBoard />
-      )}
+      <Routes>
+        {routes &&
+          routes.map((route, key) => {
+            return (
+              <Route key={key} path={route.path} element={route.element} />
+            );
+          })}
+
+        <Route
+          path="/"
+          element={
+            <UserRoute isLoggedIn={isLoggedIn}>
+              <HomePage />
+            </UserRoute>
+          }
+        />
+      </Routes>
     </>
   );
 }
