@@ -33,7 +33,7 @@ export const UserProvider = ({ children }) => {
         setIsLoggedIn(true);
       }
     } catch (error) {
-      if (error.response.status === 401) {
+      if (error?.response?.status === 401) {
         setIsLoggedIn(false);
         localStorage.removeItem("token");
         setUser(null);
