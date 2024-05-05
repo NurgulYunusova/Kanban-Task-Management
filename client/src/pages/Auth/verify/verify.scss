@@ -4,6 +4,7 @@
 .verify {
   width: 100%;
   height: 100vh;
+  background-color: #b9a4c6;
 
   &Container {
     width: 80%;
@@ -22,7 +23,7 @@
     .form {
       width: 40%;
       font-family: $base-font;
-      color: $base-color1;
+      color: #2e2c65;
 
       h3 {
         font-size: 30px;
@@ -43,12 +44,13 @@
           font-size: 14px;
           outline: none;
           background: transparent;
-          border: 1px solid #ccc;
+          border: 1px solid #1c1a3c;
 
           &::placeholder {
             font-size: 14px;
             font-family: $base-font;
             font-weight: 500;
+            color: #2e2c656f;
           }
         }
 
@@ -59,6 +61,7 @@
         button {
           max-width: max-content;
           margin: 20px auto 0;
+          @include button();
         }
       }
     }
