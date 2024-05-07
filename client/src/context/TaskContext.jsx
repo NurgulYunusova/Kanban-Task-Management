@@ -1,16 +1,22 @@
 /* eslint-disable react/prop-types */
-import { createContext, useEffect, useState } from "react";
-import data from "../data.json";
+import { createContext, useContext, useEffect, useState } from "react";
+import { UserContext } from "./UserContext";
 
 export const TaskContext = createContext();
 
 export const TaskProvider = ({ children }) => {
-  const [boards, setBoards] = useState(data.boards);
+  const { user } = useContext(UserContext);
+
+  const [boards, setBoards] = useState(null);
   const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
-    setActiveIndex(boards.findIndex((board) => board.isActive == true));
-  }, [boards]);
+    if (user) {
+      setBoards(user.boards);
+    }
+  }, [user]);
+
+  // console.log(boards);
 
   const createBoards = (newBoard) => {
     setBoards([...boards, newBoard]);

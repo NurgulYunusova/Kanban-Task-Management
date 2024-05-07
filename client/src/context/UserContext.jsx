@@ -47,6 +47,8 @@ export const UserProvider = ({ children }) => {
     updateUser();
   }, [token]);
 
+  // console.log(user);
+
   return (
     <UserContext.Provider
       value={{ user, setUser, isLoggedIn, setIsLoggedIn, updateUser }}

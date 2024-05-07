@@ -192,11 +192,10 @@ function Header() {
 
           <div className="middleSide">
             <h3>
-              {boards
-                .filter((board) => board.isActive)
-                .map((board, index) => (
-                  <span key={index}>{board.name}</span>
-                ))}
+              {boards &&
+                boards
+                  .filter((board) => board.isActive)
+                  .map((board, index) => <span key={index}>{board.name}</span>)}
             </h3>
           </div>
 

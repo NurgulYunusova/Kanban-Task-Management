@@ -10,7 +10,7 @@ function HomePage() {
 
   return (
     <>
-      {boards.length !== 0 ? (
+      {boards?.length !== 0 ? (
         <>
           <Header />
           <div className="bottom">
