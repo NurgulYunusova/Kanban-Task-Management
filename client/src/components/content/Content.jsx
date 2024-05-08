@@ -2,14 +2,14 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import "./content.scss";
 import xmark from "../../assets/images/x-mark.svg";
-import { TaskContext } from "../../context/TaskContext";
 import { DarkModeContext } from "../../context/DarkModeContext";
 import { HideSidebarContext } from "../../context/HideSidebarContext";
 import showSidebar from "../../assets/images/show-sidebar.svg";
+import { UserContext } from "../../context/UserContext";
 
 function Content() {
   const { boards, setBoards, setActiveIndex, activeIndex } =
-    useContext(TaskContext);
+    useContext(UserContext);
   const { darkMode } = useContext(DarkModeContext);
   const { isSidebarHidden, hideSidebar } = useContext(HideSidebarContext);
 

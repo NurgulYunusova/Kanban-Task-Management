@@ -68,13 +68,12 @@ function RegisterPage() {
                 placeholder="Name *"
                 onChange={handleChange}
                 value={values.name}
-              />
+              ></input>
+
               <p style={{ color: "red", fontSize: "12px", marginTop: "10px" }}>
                 {errors?.name}
               </p>
-
               <br />
-
               <input
                 type="email"
                 id="email"
@@ -85,9 +84,7 @@ function RegisterPage() {
               <p style={{ color: "red", fontSize: "12px", marginTop: "10px" }}>
                 {errors?.email}
               </p>
-
               <br />
-
               <input
                 type="password"
                 name="password"
@@ -99,9 +96,7 @@ function RegisterPage() {
               <p style={{ color: "red", fontSize: "12px", marginTop: "10px" }}>
                 {errors?.password}
               </p>
-
               <br />
-
               <input
                 type="password"
                 name="confirmPassword"
@@ -113,7 +108,6 @@ function RegisterPage() {
               <p style={{ color: "red", fontSize: "12px", marginTop: "10px" }}>
                 {errors?.confirmPassword}
               </p>
-
               <button type="submit">REGISTER</button>
             </form>
 

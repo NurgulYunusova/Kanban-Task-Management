@@ -3,10 +3,10 @@ import "./emptyBoard.scss";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import xmark from "../../assets/images/x-mark.svg";
-import { TaskContext } from "../../context/TaskContext";
+import { UserContext } from "../../context/UserContext";
 
 function EmptyBoard() {
-  const { createBoards } = useContext(TaskContext);
+  const { createBoards } = useContext(UserContext);
 
   const [modalVisible, setModalVisible] = useState(false);
   const [columnNames, setColumnNames] = useState(["Todo", "Doing"]);

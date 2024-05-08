@@ -11,6 +11,8 @@ export const UserProvider = ({ children }) => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [boards, setBoards] = useState(null);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   const token = localStorage.getItem("token");
 
@@ -28,6 +30,8 @@ export const UserProvider = ({ children }) => {
 
         if (response.status === 200) {
           setUser(response.data);
+
+          setBoards(response.data.boards);
         }
 
         setIsLoggedIn(true);
@@ -43,6 +47,10 @@ export const UserProvider = ({ children }) => {
     }
   };
 
+  const createBoards = (newBoard) => {
+    setBoards([...boards, newBoard]);
+  };
+
   useEffect(() => {
     updateUser();
   }, [token]);
@@ -51,7 +59,18 @@ export const UserProvider = ({ children }) => {
 
   return (
     <UserContext.Provider
-      value={{ user, setUser, isLoggedIn, setIsLoggedIn, updateUser }}
+      value={{
+        user,
+        setUser,
+        isLoggedIn,
+        setIsLoggedIn,
+        updateUser,
+        boards,
+        createBoards,
+        setBoards,
+        activeIndex,
+        setActiveIndex,
+      }}
     >
       {children}
     </UserContext.Provider>

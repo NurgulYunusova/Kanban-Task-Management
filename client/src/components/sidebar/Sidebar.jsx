@@ -2,15 +2,15 @@ import { useContext, useEffect, useRef, useState } from "react";
 import "./sidebar.scss";
 import { Switch } from "antd";
 import xmark from "../../assets/images/x-mark.svg";
-import { TaskContext } from "../../context/TaskContext";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { DarkModeContext } from "../../context/DarkModeContext";
 import { HideSidebarContext } from "../../context/HideSidebarContext";
+import { UserContext } from "../../context/UserContext";
 
 function Sidebar() {
   const { createBoards, boards, setBoards, activeIndex, setActiveIndex } =
-    useContext(TaskContext);
+    useContext(UserContext);
   const { darkMode, toggleDarkMode } = useContext(DarkModeContext);
   const { isSidebarHidden, hideSidebar } = useContext(HideSidebarContext);
 

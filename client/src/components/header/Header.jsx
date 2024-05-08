@@ -3,11 +3,11 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import "./header.scss";
 import xmark from "../../assets/images/x-mark.svg";
-import { TaskContext } from "../../context/TaskContext";
 import { DarkModeContext } from "../../context/DarkModeContext";
+import { UserContext } from "../../context/UserContext";
 
 function Header() {
-  const { boards, setBoards, activeIndex } = useContext(TaskContext);
+  const { boards, setBoards, activeIndex } = useContext(UserContext);
   const { darkMode } = useContext(DarkModeContext);
 
   const board = boards?.find((board) => board.isActive == true);
