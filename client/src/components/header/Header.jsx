@@ -7,12 +7,11 @@ import { DarkModeContext } from "../../context/DarkModeContext";
 import { UserContext } from "../../context/UserContext";
 
 function Header() {
-  const { boards, setBoards, activeIndex } = useContext(UserContext);
+  const { boards, setBoards, activeIndex, deleteBoard } =
+    useContext(UserContext);
   const { darkMode } = useContext(DarkModeContext);
 
   const board = boards?.find((board) => board.isActive == true);
-
-  console.log("boards", boards);
 
   const [columns, setColumns] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
@@ -58,14 +57,8 @@ function Header() {
     setIsEditOpen(false);
   };
 
-  const handleDelete = () => {
-    const remainingBoards = boards.filter((board) => board.isActive !== true);
-
-    if (remainingBoards.length > 0) {
-      remainingBoards[0].isActive = true;
-    }
-
-    setBoards(remainingBoards);
+  const handleDelete = (id) => {
+    deleteBoard(id);
 
     closeDeleteModal();
   };
@@ -464,7 +457,10 @@ function Header() {
                       be reversed.
                     </p>
                     <div className="modalActions">
-                      <button onClick={handleDelete} id="delete">
+                      <button
+                        onClick={() => handleDelete(board._id)}
+                        id="delete"
+                      >
                         Delete
                       </button>
                       <button onClick={closeDeleteModal} id="cancel">

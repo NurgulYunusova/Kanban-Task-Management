@@ -56,9 +56,10 @@ const boardController = {
   },
   getAllBoardsByUserId: async (req, res) => {
     try {
-      const userId = req.params.id; // Assuming userId is passed as a parameter in the route
+      const userId = req.params.id;
 
       const user = await User.findById(userId);
+
       if (!user) {
         return res.status(404).json({ error: "User not found" });
       }
@@ -69,6 +70,37 @@ const boardController = {
       res.status(500).json({ error: error.message });
     }
   },
+  deleteBoard: async (req, res) => {
+    try {
+      const boardId = req.params.id;
+
+      const board = await Board.findById(boardId);
+
+      if (!board) {
+        return res.status(404).json({ message: "Board not found" });
+      }
+
+      const columnIds = board.columns;
+
+      for (const columnId of columnIds) {
+        await Column.findByIdAndDelete(columnId);
+      }
+
+      await Board.findByIdAndDelete(boardId);
+
+      await User.updateMany(
+        { boards: boardId },
+        { $pull: { boards: boardId } }
+      );
+
+      res
+        .status(200)
+        .json({ message: "Board and associated columns deleted successfully" });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to delete board", error });
+    }
+  },
+
   // getBoardById: async (req, res) => {
   //   try {
   //     const board = await Board.findById(req.params.id).populate("columns");
@@ -91,18 +123,6 @@ const boardController = {
   //     board.isActive = isActive;
   //     await board.save();
   //     res.json(board);
-  //   } catch (error) {
-  //     res.status(500).json({ error: error.message });
-  //   }
-  // },
-  // deleteBoard: async (req, res) => {
-  //   try {
-  //     const board = await Board.findById(req.params.id);
-  //     if (!board) {
-  //       return res.status(404).json({ error: "Board not found" });
-  //     }
-  //     await board.remove();
-  //     res.json({ message: "Board deleted successfully" });
   //   } catch (error) {
   //     res.status(500).json({ error: error.message });
   //   }
