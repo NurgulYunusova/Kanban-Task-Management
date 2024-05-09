@@ -11,7 +11,7 @@ export const UserProvider = ({ children }) => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [boards, setBoards] = useState(null);
+  const [boards, setBoards] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
 
   const token = localStorage.getItem("token");
@@ -30,8 +30,6 @@ export const UserProvider = ({ children }) => {
 
         if (response.status === 200) {
           setUser(response.data);
-
-          setBoards(response.data.boards);
         }
 
         setIsLoggedIn(true);
@@ -47,15 +45,51 @@ export const UserProvider = ({ children }) => {
     }
   };
 
-  const createBoards = (newBoard) => {
-    setBoards([...boards, newBoard]);
+  const createBoards = async (newBoard) => {
+    const response = await axios.post(
+      `${import.meta.env.VITE_SERVER_URL}/api/board`,
+      {
+        name: newBoard.name,
+        userId: user._id,
+        columnNames: newBoard.columns,
+      }
+    );
+
+    if (response.status === 201) {
+      setBoards([...boards, response.data]);
+    }
   };
+
+  const getBoards = async () => {
+    try {
+      if (user) {
+        const response = await axios.get(
+          `${import.meta.env.VITE_SERVER_URL}/api/board/user/${user._id}`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+
+        console.log("response", response.data);
+
+        if (response.status === 200) {
+          setBoards(response.data);
+        }
+      }
+    } catch (error) {
+      console.error("An error occurred while fetching boards:", error);
+    }
+  };
+
+  useEffect(() => {
+    getBoards();
+  }, [user]);
 
   useEffect(() => {
     updateUser();
   }, [token]);
-
-  // console.log(user);
 
   return (
     <UserContext.Provider

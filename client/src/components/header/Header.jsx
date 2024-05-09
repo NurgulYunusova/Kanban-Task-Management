@@ -12,6 +12,8 @@ function Header() {
 
   const board = boards?.find((board) => board.isActive == true);
 
+  console.log("boards", boards);
+
   const [columns, setColumns] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);

@@ -28,8 +28,7 @@ function EmptyBoard() {
       onSubmit: ({ name, columns }) => {
         createBoards({
           name: name,
-          isActive: true,
-          columns: columns.map((column) => ({ name: column, tasks: [] })),
+          columns: columns.map((column) => column),
         });
 
         setModalVisible(false);

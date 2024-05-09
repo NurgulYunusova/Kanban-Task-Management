@@ -8,12 +8,24 @@ const boardController = {
     try {
       const { name, userId, columnNames } = req.body;
 
-      const board = new Board({ name, userId });
+      const existingBoards = await Board.find({ user: userId });
+      const isActive = existingBoards.length === 0;
+
+      const board = new Board({
+        name: name,
+        user: userId,
+        isActive: isActive,
+      });
+
       await board.save();
 
       const columns = [];
       for (const columnName of columnNames) {
-        const column = new Column({ name: columnName, board: board._id });
+        const column = new Column({
+          name: columnName,
+          board: board._id,
+          tasks: [],
+        });
         await column.save();
         columns.push(column);
       }
@@ -33,9 +45,25 @@ const boardController = {
       res.status(500).json({ error: error.message });
     }
   },
+
   getAllBoards: async (req, res) => {
     try {
       const boards = await Board.find().populate("columns");
+      res.json(boards);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  },
+  getAllBoardsByUserId: async (req, res) => {
+    try {
+      const userId = req.params.id; // Assuming userId is passed as a parameter in the route
+
+      const user = await User.findById(userId);
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      const boards = await Board.find({ user: userId }).populate("columns");
       res.json(boards);
     } catch (error) {
       res.status(500).json({ error: error.message });
