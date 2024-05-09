@@ -15,7 +15,8 @@ export const UserProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [boards, setBoards] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [boardRemoveAlertOpen, setBoardRemoveAlertOpen] = useState(false);
+  const [boardAddAlertOpen, setBoardAddAlertOpen] = useState(false);
+  const [boardDeleteAlertOpen, setBoardDeleteAlertOpen] = useState(false);
 
   const token = localStorage.getItem("token");
 
@@ -60,7 +61,15 @@ export const UserProvider = ({ children }) => {
 
     if (response.status === 201) {
       setBoards([...boards, response.data]);
+      setBoardAddAlertOpen(true);
     }
+  };
+
+  const handleCloseBoardAddAlert = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setBoardAddAlertOpen(false);
   };
 
   const getBoards = async () => {
@@ -94,7 +103,7 @@ export const UserProvider = ({ children }) => {
 
       if (response.status === 200) {
         setBoards(boards.filter((item) => item._id !== id));
-        setBoardRemoveAlertOpen(true);
+        setBoardDeleteAlertOpen(true);
         getBoards();
       }
     } catch (error) {
@@ -102,11 +111,11 @@ export const UserProvider = ({ children }) => {
     }
   };
 
-  const handleCloseRemoveWishlistAlert = (event, reason) => {
+  const handleCloseBoardDeleteAlert = (event, reason) => {
     if (reason === "clickaway") {
       return;
     }
-    setBoardRemoveAlertOpen(false);
+    setBoardDeleteAlertOpen(false);
   };
 
   useEffect(() => {
@@ -136,20 +145,38 @@ export const UserProvider = ({ children }) => {
       {children}
 
       <Snackbar
-        open={boardRemoveAlertOpen}
+        open={boardAddAlertOpen}
         autoHideDuration={3000}
-        onClose={handleCloseRemoveWishlistAlert}
+        onClose={handleCloseBoardAddAlert}
         anchorOrigin={{
           vertical: "bottom",
           horizontal: "right",
         }}
       >
         <MuiAlert
-          onClose={handleCloseRemoveWishlistAlert}
+          onClose={handleCloseBoardAddAlert}
           severity="success"
           sx={{ width: "100%" }}
         >
-          Board successfully deleted!
+          The new board has been successfully created!
+        </MuiAlert>
+      </Snackbar>
+
+      <Snackbar
+        open={boardDeleteAlertOpen}
+        autoHideDuration={3000}
+        onClose={handleCloseBoardDeleteAlert}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right",
+        }}
+      >
+        <MuiAlert
+          onClose={handleCloseBoardDeleteAlert}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          Board deleted successfully!
         </MuiAlert>
       </Snackbar>
     </UserContext.Provider>
