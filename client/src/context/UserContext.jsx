@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import axios from "axios";
 import { createContext, useEffect, useState } from "react";
@@ -84,8 +83,6 @@ export const UserProvider = ({ children }) => {
           }
         );
 
-        console.log("response", response.data);
-
         if (response.status === 200) {
           setBoards(response.data);
         }
@@ -118,6 +115,22 @@ export const UserProvider = ({ children }) => {
     setBoardDeleteAlertOpen(false);
   };
 
+  const updateBoard = async (id, name, columns) => {
+    try {
+      console.log(columns);
+
+      const response = await axios.put(
+        `${import.meta.env.VITE_SERVER_URL}/api/board/${id}`,
+        { name, columns } // Send columns as array of ObjectIds
+      );
+
+      console.log(response);
+      // Handle response as needed
+    } catch (error) {
+      console.error("Error updating board:", error);
+    }
+  };
+
   useEffect(() => {
     getBoards();
   }, [user]);
@@ -140,6 +153,7 @@ export const UserProvider = ({ children }) => {
         activeIndex,
         setActiveIndex,
         deleteBoard,
+        updateBoard,
       }}
     >
       {children}

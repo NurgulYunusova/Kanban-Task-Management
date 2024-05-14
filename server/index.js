@@ -7,6 +7,7 @@ const app = express();
 
 const { userRoutes } = require("./routes/userRoute");
 const { boardRoutes } = require("./routes/boardRoute");
+const { taskRoutes } = require("./routes/taskRoute");
 
 require("dotenv").config();
 
@@ -18,6 +19,7 @@ app.use(cors());
 
 app.use("/api/user", userRoutes);
 app.use("/api/board", boardRoutes);
+app.use("/api/task", taskRoutes);
 
 app.listen(8080, () => {
   console.log("Server listening on port 8080");

@@ -20,12 +20,14 @@ const boardController = {
       await board.save();
 
       const columns = [];
+
       for (const columnName of columnNames) {
         const column = new Column({
           name: columnName,
           board: board._id,
           tasks: [],
         });
+
         await column.save();
         columns.push(column);
       }
@@ -34,10 +36,13 @@ const boardController = {
       await board.save();
 
       const user = await User.findById(userId);
+
       if (!user) {
         return res.status(404).json({ error: "User not found" });
       }
+
       user.boards.push(board._id);
+
       await user.save();
 
       res.status(201).json(board);
@@ -45,7 +50,6 @@ const boardController = {
       res.status(500).json({ error: error.message });
     }
   },
-
   getAllBoards: async (req, res) => {
     try {
       const boards = await Board.find().populate("columns");
@@ -64,7 +68,15 @@ const boardController = {
         return res.status(404).json({ error: "User not found" });
       }
 
-      const boards = await Board.find({ user: userId }).populate("columns");
+      const boards = await Board.find({ user: userId }).populate({
+        path: "columns",
+        populate: {
+          path: "tasks",
+          populate: {
+            path: "subtasks",
+          },
+        },
+      });
       res.json(boards);
     } catch (error) {
       res.status(500).json({ error: error.message });
@@ -100,6 +112,29 @@ const boardController = {
       res.status(500).json({ message: "Failed to delete board", error });
     }
   },
+  // updateBoard: async (req, res) => {
+  //   try {
+  //     const { id } = req.params;
+  //     const { name, columns } = req.body;
+
+  //     const board = await Board.findById(id).populate("columns");
+
+  //     if (!board) {
+  //       return res.status(404).json({ message: "Board not found" });
+  //     }
+
+  //     board.name = name;
+
+  //     await board.save();
+
+  //     return res
+  //       .status(200)
+  //       .json({ message: "Board updated successfully", board });
+  //   } catch (error) {
+  //     console.error("Error updating board:", error);
+  //     return res.status(500).json({ message: "Internal server error" });
+  //   }
+  // },
 
   // getBoardById: async (req, res) => {
   //   try {
@@ -107,21 +142,6 @@ const boardController = {
   //     if (!board) {
   //       return res.status(404).json({ error: "Board not found" });
   //     }
-  //     res.json(board);
-  //   } catch (error) {
-  //     res.status(500).json({ error: error.message });
-  //   }
-  // },
-  // updateBoard: async (req, res) => {
-  //   try {
-  //     const { name, isActive } = req.body;
-  //     const board = await Board.findById(req.params.id);
-  //     if (!board) {
-  //       return res.status(404).json({ error: "Board not found" });
-  //     }
-  //     board.name = name;
-  //     board.isActive = isActive;
-  //     await board.save();
   //     res.json(board);
   //   } catch (error) {
   //     res.status(500).json({ error: error.message });

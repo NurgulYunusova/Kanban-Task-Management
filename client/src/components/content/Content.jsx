@@ -8,7 +8,7 @@ import showSidebar from "../../assets/images/show-sidebar.svg";
 import { UserContext } from "../../context/UserContext";
 
 function Content() {
-  const { boards, setBoards, setActiveIndex, activeIndex } =
+  const { boards, setBoards, setActiveIndex, activeIndex, updateBoard } =
     useContext(UserContext);
   const { darkMode } = useContext(DarkModeContext);
   const { isSidebarHidden, hideSidebar } = useContext(HideSidebarContext);
@@ -27,6 +27,7 @@ function Content() {
   const [description, setDescription] = useState("");
   const [subtasks, setSubtasks] = useState([]);
   const [columns, setColumns] = useState([]);
+  const [deletedColumnIds, setDeletedColumnIds] = useState([]);
 
   const modalRef = useRef();
 
@@ -69,13 +70,18 @@ function Content() {
       return;
     }
 
-    const updatedBoards = [...boards];
-    const activeBoard = updatedBoards[activeIndex];
+    // const updatedBoards = [...boards];
+    // const activeBoard = updatedBoards[activeIndex];
 
-    activeBoard.name = boardName;
-    activeBoard.columns = columns;
+    // activeBoard.name = boardName;
+    // activeBoard.columns = columns;
 
-    setBoards(updatedBoards);
+    // console.log(activeBoard);
+
+    updateBoard(board._id, boardName, columns);
+    console.log(board._id, boardName, columns, deletedColumnIds);
+
+    // setBoards(updatedBoards);
     setModalVisible(false);
   };
 
@@ -707,6 +713,10 @@ function Content() {
                                     const updatedColumns = [...columns];
                                     updatedColumns.splice(index, 1);
                                     setColumns(updatedColumns);
+                                    setDeletedColumnIds([
+                                      ...deletedColumnIds,
+                                      column._id,
+                                    ]);
                                   }}
                                 />
                               }
