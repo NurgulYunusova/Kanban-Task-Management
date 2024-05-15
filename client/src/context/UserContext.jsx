@@ -121,13 +121,47 @@ export const UserProvider = ({ children }) => {
 
       const response = await axios.put(
         `${import.meta.env.VITE_SERVER_URL}/api/board/${id}`,
-        { name, columns } // Send columns as array of ObjectIds
+        { name, columns }
       );
 
       console.log(response);
-      // Handle response as needed
     } catch (error) {
       console.error("Error updating board:", error);
+    }
+  };
+
+  const addNewTask = async ({
+    title,
+    status,
+    description,
+    subtaskNames,
+    id,
+  }) => {
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_SERVER_URL}/api/task/${id}`,
+        {
+          title,
+          status,
+          description,
+          subtaskNames,
+        }
+      );
+
+      console.log(response);
+
+      if (response.status === 201) {
+        const boardIndex = boards.findIndex((board) => board._id === id);
+
+        if (boardIndex !== -1) {
+          const updatedBoards = [...boards];
+          updatedBoards[boardIndex]?.tasks?.push(response.data);
+          setBoards(updatedBoards);
+          getBoards();
+        }
+      }
+    } catch (error) {
+      console.error("Error adding new task:", error);
     }
   };
 
@@ -154,6 +188,7 @@ export const UserProvider = ({ children }) => {
         setActiveIndex,
         deleteBoard,
         updateBoard,
+        addNewTask,
       }}
     >
       {children}

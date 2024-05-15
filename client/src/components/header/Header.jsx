@@ -7,7 +7,7 @@ import { DarkModeContext } from "../../context/DarkModeContext";
 import { UserContext } from "../../context/UserContext";
 
 function Header() {
-  const { boards, setBoards, activeIndex, deleteBoard } =
+  const { boards, setBoards, activeIndex, deleteBoard, addNewTask } =
     useContext(UserContext);
   const { darkMode } = useContext(DarkModeContext);
 
@@ -116,29 +116,19 @@ function Header() {
       return;
     }
 
-    const subtaskObjects = subtasks.map((subtask) => ({
-      title: subtask,
-      isCompleted: false,
-    }));
-
-    const newTask = {
-      title: taskName,
-      status: selectedStatus,
-      subtasks: subtaskObjects,
-      description: description.length !== 0 ? description : "",
-    };
-
-    let columnIndex = boards[activeIndex].columns.findIndex(
+    const selectedColumn = columns.find(
       (column) => column.name === selectedStatus
     );
 
-    if (columnIndex === -1) {
-      columnIndex = 0;
-    }
+    const statusId = selectedColumn ? selectedColumn._id : null;
 
-    boards[activeIndex].columns[columnIndex].tasks.push(newTask);
-
-    setBoards([...boards]);
+    addNewTask({
+      title: taskName,
+      status: statusId,
+      subtaskNames: subtasks,
+      description: description.length !== 0 ? description : "",
+      id: board._id,
+    });
 
     setTaskName("");
     setDescription("");
