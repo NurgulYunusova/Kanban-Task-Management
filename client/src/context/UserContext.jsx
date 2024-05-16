@@ -148,8 +148,6 @@ export const UserProvider = ({ children }) => {
         }
       );
 
-      console.log(response);
-
       if (response.status === 201) {
         const boardIndex = boards.findIndex((board) => board._id === id);
 
@@ -162,6 +160,14 @@ export const UserProvider = ({ children }) => {
       }
     } catch (error) {
       console.error("Error adding new task:", error);
+    }
+  };
+
+  const changeSubtaskIsCompleted = async (id) => {
+    try {
+      await axios.put(`${import.meta.env.VITE_SERVER_URL}/api/subtask/${id}`);
+    } catch (error) {
+      console.error("Error changing subtask completion:", error);
     }
   };
 
@@ -189,6 +195,7 @@ export const UserProvider = ({ children }) => {
         deleteBoard,
         updateBoard,
         addNewTask,
+        changeSubtaskIsCompleted,
       }}
     >
       {children}

@@ -8,8 +8,14 @@ import showSidebar from "../../assets/images/show-sidebar.svg";
 import { UserContext } from "../../context/UserContext";
 
 function Content() {
-  const { boards, setBoards, setActiveIndex, activeIndex, updateBoard } =
-    useContext(UserContext);
+  const {
+    boards,
+    setBoards,
+    setActiveIndex,
+    activeIndex,
+    updateBoard,
+    changeSubtaskIsCompleted,
+  } = useContext(UserContext);
   const { darkMode } = useContext(DarkModeContext);
   const { isSidebarHidden, hideSidebar } = useContext(HideSidebarContext);
 
@@ -91,10 +97,17 @@ function Content() {
     setTask(data);
   };
 
-  const handleInputClick = (index) => {
-    const subtask = task.subtasks.find((subtask, i) => i === index);
+  const handleInputClick = (id) => {
+    changeSubtaskIsCompleted(id);
 
-    subtask.isCompleted = !subtask.isCompleted;
+    const updatedSubtasks = subtasks.map((subtask) => {
+      if (subtask._id === id) {
+        subtask.isCompleted = !subtask.isCompleted;
+      }
+      return subtask;
+    });
+
+    setSubtasks(updatedSubtasks);
   };
 
   const handleAddSubtask = () => {
@@ -617,7 +630,7 @@ function Content() {
                               className="subtaskCheckbox"
                               type="checkbox"
                               defaultChecked={q.isCompleted ? true : false}
-                              onClick={() => handleInputClick(index)}
+                              onClick={() => handleInputClick(q._id)}
                             ></input>
                             <p>{q.title}</p>
                           </li>
