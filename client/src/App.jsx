@@ -10,7 +10,7 @@ function App() {
   const { isLoggedIn } = useContext(UserContext);
 
   return (
-    <>
+    <div>
       <Routes>
         {routes &&
           routes.map((route, key) => {
@@ -28,7 +28,7 @@ function App() {
           }
         />
       </Routes>
-    </>
+    </div>
   );
 }
 

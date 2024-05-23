@@ -77,6 +77,7 @@ const boardController = {
           },
         },
       });
+
       res.json(boards);
     } catch (error) {
       res.status(500).json({ error: error.message });

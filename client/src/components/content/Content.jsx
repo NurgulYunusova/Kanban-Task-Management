@@ -15,6 +15,7 @@ function Content() {
     activeIndex,
     updateBoard,
     changeSubtaskIsCompleted,
+    changeStatus,
   } = useContext(UserContext);
   const { darkMode } = useContext(DarkModeContext);
   const { isSidebarHidden, hideSidebar } = useContext(HideSidebarContext);
@@ -43,7 +44,7 @@ function Content() {
   }, [board]);
 
   useEffect(() => {
-    setSelectedStatus(columns[0]?.name);
+    setSelectedStatus(columns[0]?._id);
   }, [columns]);
 
   useEffect(() => {
@@ -174,56 +175,43 @@ function Content() {
     setTaskModalVisible(false);
   };
 
-  const handleTaskSubmit = (e) => {
-    e.preventDefault();
+  // const handleTaskSubmit = (e) => {
+  //   e.preventDefault();
 
-    if (
-      taskName.trim().length === 0 ||
-      subtasks.some((subtask) => subtask.title.trim().length === 0)
-    ) {
+  //   if (
+  //     taskName.trim().length === 0 ||
+  //     subtasks.some((subtask) => subtask.title.trim().length === 0)
+  //   ) {
+  //     return;
+  //   }
+
+  //   task.title = taskName;
+  //   task.description = description;
+  //   task.subtasks = subtasks;
+
+  //   if (task.status !== selectedStatus) {
+  //     changeStatus();
+  //     task.status = selectedStatus;
+  //   }
+
+  //   const updatedBoards = boards.map((board, index) => ({
+  //     ...board,
+  //     columns: index === activeIndex ? columns : board.columns,
+  //   }));
+
+  //   setBoards(updatedBoards);
+  //   setIsEditOpen(false);
+  //   setTaskModalVisible(false);
+  // };
+
+  const changeStatusFunc = (id) => {
+    if (task.status === selectedStatus) {
       return;
     }
 
-    task.title = taskName;
-    task.description = description;
-    task.subtasks = subtasks;
-
-    if (task.status !== selectedStatus) {
-      changeStatus();
-      task.status = selectedStatus;
-    }
-
-    const updatedBoards = boards.map((board, index) => ({
-      ...board,
-      columns: index === activeIndex ? columns : board.columns,
-    }));
-
-    setBoards(updatedBoards);
-    setIsEditOpen(false);
+    changeStatus(id, selectedStatus);
     setTaskModalVisible(false);
-  };
-
-  const changeStatus = () => {
-    if (task && selectedStatus !== task.status) {
-      const updatedBoards = [...boards];
-      const columnIndex = columns.findIndex((col) => col.name === task.status);
-      const taskIndex = columns[columnIndex].tasks.findIndex(
-        (t) => t.title === task.title
-      );
-
-      if (taskIndex !== -1) {
-        const updatedTask = { ...task, status: selectedStatus };
-        columns[columnIndex].tasks.splice(taskIndex, 1);
-        const newColumnIndex = columns.findIndex(
-          (col) => col.name === selectedStatus
-        );
-        columns[newColumnIndex]?.tasks?.push(updatedTask);
-        setBoards(updatedBoards);
-      }
-
-      setTaskModalVisible(false);
-      setSelectedStatus("");
-    }
+    setSelectedStatus("");
   };
 
   useEffect(() => {
@@ -456,7 +444,8 @@ function Content() {
                           <div className="modalBackdrop editModal">
                             <div className="modal" ref={modalRef}>
                               <h3>Edit Task</h3>
-                              <form onSubmit={(e) => handleTaskSubmit(e)}>
+                              {/* <form onSubmit={(e) => handleTaskSubmit(e)}> */}
+                              <form>
                                 <label htmlFor="name">Task Name</label> <br />
                                 <input
                                   type="text"
@@ -646,7 +635,7 @@ function Content() {
                         defaultValue={task?.status}
                       >
                         {columns?.map((column, index) => (
-                          <option value={column.name} key={index}>
+                          <option value={column._id} key={index}>
                             {column.name}
                           </option>
                         ))}
@@ -657,7 +646,7 @@ function Content() {
                       <button
                         className="changeStatusBtn"
                         type="submit"
-                        onClick={changeStatus}
+                        onClick={() => changeStatusFunc(task._id)}
                       >
                         Change Status
                       </button>

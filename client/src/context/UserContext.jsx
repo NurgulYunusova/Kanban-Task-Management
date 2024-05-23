@@ -85,6 +85,7 @@ export const UserProvider = ({ children }) => {
 
         if (response.status === 200) {
           setBoards(response.data);
+          setActiveIndex(0);
         }
       }
     } catch (error) {
@@ -117,8 +118,6 @@ export const UserProvider = ({ children }) => {
 
   const updateBoard = async (id, name, columns) => {
     try {
-      console.log(columns);
-
       const response = await axios.put(
         `${import.meta.env.VITE_SERVER_URL}/api/board/${id}`,
         { name, columns }
@@ -171,6 +170,24 @@ export const UserProvider = ({ children }) => {
     }
   };
 
+  const changeStatus = async (id, newStatusId) => {
+    try {
+      const response = await axios.put(
+        `${import.meta.env.VITE_SERVER_URL}/api/task/${id}/${user._id}`,
+        { newStatus: newStatusId }
+      );
+
+      if (response.status === 200) {
+        setBoards(response.data.boards);
+        setActiveIndex(0);
+      } else {
+        console.error("Error updating task status:", response.data.message);
+      }
+    } catch (error) {
+      console.error("Network error:", error);
+    }
+  };
+
   useEffect(() => {
     getBoards();
   }, [user]);
@@ -196,6 +213,7 @@ export const UserProvider = ({ children }) => {
         updateBoard,
         addNewTask,
         changeSubtaskIsCompleted,
+        changeStatus,
       }}
     >
       {children}

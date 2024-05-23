@@ -53,6 +53,53 @@ const taskController = {
       res.status(500).json({ error: "Internal server error" });
     }
   },
+  changeStatus: async (req, res) => {
+    const taskId = req.params.id;
+    const userId = req.params.userId;
+    const { newStatus } = req.body;
+
+    try {
+      const task = await Task.findById(taskId);
+
+      if (!task) {
+        return res.status(404).json({ message: "Task not found" });
+      }
+
+      if (task.status._id.toString() === newStatus) {
+        return res.status(201).json({ message: "Status is the same", task });
+      }
+
+      const currentColumn = await Column.findById(task.status);
+      currentColumn.tasks.pull(taskId);
+      await currentColumn.save();
+
+      const newColumn = await Column.findById(newStatus);
+      newColumn.tasks.push(taskId);
+      await newColumn.save();
+
+      const updatedTask = await Task.findByIdAndUpdate(
+        taskId,
+        { status: newStatus },
+        { new: true }
+      );
+
+      const boards = await Board.find({ user: userId }).populate({
+        path: "columns",
+        populate: {
+          path: "tasks",
+          populate: {
+            path: "subtasks",
+          },
+        },
+      });
+
+      res
+        .status(200)
+        .json({ message: "Task status updated", task: updatedTask, boards });
+    } catch (error) {
+      res.status(500).json({ message: "Server error", error });
+    }
+  },
 };
 
 module.exports = {
