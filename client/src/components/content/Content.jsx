@@ -11,11 +11,12 @@ function Content() {
   const {
     boards,
     setBoards,
-    setActiveIndex,
+    // setActiveIndex,
     activeIndex,
     updateBoard,
     changeSubtaskIsCompleted,
     changeStatus,
+    deleteTask,
   } = useContext(UserContext);
   const { darkMode } = useContext(DarkModeContext);
   const { isSidebarHidden, hideSidebar } = useContext(HideSidebarContext);
@@ -157,19 +158,8 @@ function Content() {
     setIsDeleteOpen(false);
   };
 
-  const handleDelete = () => {
-    const updatedColumns = columns.map((column) => ({
-      ...column,
-      tasks: column.tasks.filter((t) => t.title !== task.title),
-    }));
-
-    const updatedBoards = boards.map((board, index) => ({
-      ...board,
-      columns: index === activeIndex ? updatedColumns : board.columns,
-    }));
-
-    setBoards(updatedBoards);
-    setActiveIndex(0);
+  const handleDelete = async (id) => {
+    await deleteTask(id);
 
     closeDeleteModal();
     setTaskModalVisible(false);
@@ -578,7 +568,10 @@ function Content() {
                                 reversed.
                               </p>
                               <div className="modalActions">
-                                <button onClick={handleDelete} id="delete">
+                                <button
+                                  onClick={() => handleDelete(task._id)}
+                                  id="delete"
+                                >
                                   Delete
                                 </button>
                                 <button onClick={closeDeleteModal} id="cancel">

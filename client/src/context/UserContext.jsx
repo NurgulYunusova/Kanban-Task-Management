@@ -188,6 +188,23 @@ export const UserProvider = ({ children }) => {
     }
   };
 
+  const deleteTask = async (id) => {
+    try {
+      const response = await axios.delete(
+        `${import.meta.env.VITE_SERVER_URL}/api/task/${id}`
+      );
+
+      if (response.status === 200) {
+        console.log("deleted");
+        getBoards();
+      } else {
+        console.error("Failed to delete task:", response.data.message);
+      }
+    } catch (error) {
+      console.error("An error occurred while deleting the task:", error);
+    }
+  };
+
   useEffect(() => {
     getBoards();
   }, [user]);
@@ -214,6 +231,7 @@ export const UserProvider = ({ children }) => {
         addNewTask,
         changeSubtaskIsCompleted,
         changeStatus,
+        deleteTask,
       }}
     >
       {children}
