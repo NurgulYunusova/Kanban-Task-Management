@@ -5,13 +5,25 @@ import "./header.scss";
 import xmark from "../../assets/images/x-mark.svg";
 import { DarkModeContext } from "../../context/DarkModeContext";
 import { UserContext } from "../../context/UserContext";
+import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
+import { useNavigate } from "react-router-dom";
+import { Snackbar } from "@mui/material";
+import MuiAlert from "@mui/material/Alert";
 
 function Header() {
-  const { boards, setBoards, activeIndex, deleteBoard, addNewTask } =
-    useContext(UserContext);
+  const {
+    boards,
+    setBoards,
+    activeIndex,
+    deleteBoard,
+    addNewTask,
+    setIsLoggedIn,
+  } = useContext(UserContext);
   const { darkMode } = useContext(DarkModeContext);
 
   const board = boards?.find((board) => board.isActive == true);
+
+  const navigate = useNavigate();
 
   const [columns, setColumns] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
@@ -23,6 +35,7 @@ function Header() {
   const [taskName, setTaskName] = useState("");
   const [description, setDescription] = useState("");
   const [subtasks, setSubtasks] = useState(["", ""]);
+  const [logoutAlertOpen, setLogoutAlertOpen] = useState(false);
 
   const modalRef = useRef();
 
@@ -136,6 +149,21 @@ function Header() {
     setBoardName("");
     setSelectedStatus(boards[activeIndex].columns[0].name);
     setModalVisible(false);
+  };
+
+  const handleLogOut = () => {
+    localStorage.removeItem("token");
+    setIsLoggedIn(false);
+    navigate("/");
+    setLogoutAlertOpen(true);
+    window.scrollTo(0, 0);
+  };
+
+  const handleCloseLogoutAlert = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setLogoutAlertOpen(false);
   };
 
   useEffect(() => {
@@ -461,6 +489,35 @@ function Header() {
                 </div>
               )}
             </div>
+
+            <span onClick={() => handleLogOut()}>
+              <LogoutOutlinedIcon
+                className="headerLogout"
+                style={{
+                  color: "#828fa3",
+                  fontSize: "28px",
+                  cursor: "pointer",
+                }}
+              />
+            </span>
+
+            <Snackbar
+              open={logoutAlertOpen}
+              autoHideDuration={3000}
+              onClose={handleCloseLogoutAlert}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "right",
+              }}
+            >
+              <MuiAlert
+                onClose={handleCloseLogoutAlert}
+                severity="success"
+                sx={{ width: "100%" }}
+              >
+                You have successfully logged out!
+              </MuiAlert>
+            </Snackbar>
           </div>
         </div>
       </header>
